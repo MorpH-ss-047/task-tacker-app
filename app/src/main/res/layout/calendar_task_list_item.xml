@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/taskCard"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="8dp"
+    android:padding="6dp"
+    app:cardCornerRadius="8dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <CheckBox
+            android:id="@+id/taskStatusCb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/colorTheme"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/taskTitleTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="170dp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:layout_toEndOf="@id/taskStatusCb"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="8dp"
+            android:paddingVertical="4dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:text="@string/heading_placeholder"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/priorityTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/taskDescriptionTv"
+            android:layout_alignBottom="@id/taskTitleTv"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_toEndOf="@id/taskTitleTv"
+            android:background="@drawable/priority_background_critical"
+            android:gravity="center"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="2dp"
+            android:text="@string/critical"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="8sp" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/deadlineTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/taskDescriptionTv"
+            android:layout_alignBottom="@id/taskTitleTv"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="3dp"
+            android:layout_toEndOf="@id/priorityTv"
+            android:padding="2dp"
+            android:text="@string/deadline"
+            android:textColor="@color/black"
+            android:textSize="11sp" />
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/taskEndDateTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/taskDescriptionTv"
+            android:layout_alignBottom="@id/taskTitleTv"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="3dp"
+            android:layout_toEndOf="@id/deadlineTv"
+            android:paddingVertical="2dp"
+            android:text="@string/dummy_date"
+            android:maxLines="1"
+            android:textColor="@color/black"
+            android:textSize="11sp" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/taskDescriptionTv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/taskTitleTv"
+            android:layout_alignStart="@id/taskTitleTv"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="5dp"
+            android:layout_alignParentEnd="true"
+            android:lineSpacingExtra="2dp"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:paddingHorizontal="8dp"
+            android:paddingBottom="4dp"
+            android:text="@string/description_placeholder"
+            android:textColor="@color/black"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

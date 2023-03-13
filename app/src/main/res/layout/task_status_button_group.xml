@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <Button
+        android:id="@+id/allTasksButtonTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/all"
+        android:background="@drawable/task_status_button_bg"
+        app:strokeWidth="0dp"
+        android:textColor="@color/white"
+        android:paddingTop="0dp"
+        android:paddingBottom="2dp"
+        android:textStyle="normal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/completedButtonTv"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/completedButtonTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/completed"
+        android:background="@drawable/task_status_button_bg"
+        app:strokeWidth="0dp"
+        android:textColor="@color/white"
+        android:paddingTop="0dp"
+        android:paddingBottom="2dp"
+        android:textStyle="normal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/pendingButtonTv"
+        app:layout_constraintStart_toEndOf="@id/allTasksButtonTv" />
+
+    <Button
+        android:id="@+id/pendingButtonTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pending"
+        android:background="@drawable/task_status_button_bg"
+        app:strokeWidth="0dp"
+        android:textColor="@color/white"
+        android:paddingTop="0dp"
+        android:paddingBottom="2dp"
+        android:textStyle="normal"
+        app:layout_constraintTop_toTopOf="@id/completedButtonTv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/completedButtonTv" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

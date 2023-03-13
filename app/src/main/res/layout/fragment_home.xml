@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.HomeFragment">
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/minusThreeDays"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="2dp"
+        android:visibility="visible"
+        android:backgroundTint="@color/date_buttons_background_color"
+        android:fontFamily="@font/roboto"
+        android:text="@string/_17"
+        android:textColor="@color/text_color"
+        android:textSize="12sp"
+        app:cornerRadius="8dp"
+        app:layout_constraintEnd_toStartOf="@id/minusTwoDays"
+        app:layout_constraintStart_toStartOf="@id/taskListHomeScreenRv"
+        app:layout_constraintTop_toTopOf="@id/todayButton" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/minusTwoDays"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="2dp"
+        android:visibility="visible"
+        android:backgroundTint="@color/date_buttons_background_color"
+        android:fontFamily="@font/roboto"
+        android:text="@string/_19"
+        android:textColor="@color/text_color"
+        android:textSize="12sp"
+        app:cornerRadius="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/minusOneDay"
+        app:layout_constraintStart_toEndOf="@+id/minusThreeDays"
+        app:layout_constraintTop_toTopOf="@id/todayButton" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/minusOneDay"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="2dp"
+        android:visibility="visible"
+        android:backgroundTint="@color/date_buttons_background_color"
+        android:fontFamily="@font/roboto"
+        android:text="@string/_20"
+        android:textColor="@color/text_color"
+        android:textSize="12sp"
+        app:cornerRadius="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/todayButton"
+        app:layout_constraintStart_toEndOf="@+id/minusTwoDays"
+        app:layout_constraintTop_toTopOf="@id/todayButton"
+        tools:layout_editor_absoluteY="2dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/todayButton"
+        android:layout_width="80dp"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="2dp"
+        android:layout_marginTop="16dp"
+        android:visibility="visible"
+        android:backgroundTint="@color/date_buttons_background_color"
+        android:fontFamily="@font/roboto"
+        android:text="@string/today"
+        android:textColor="@color/text_color"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/plusOneDay"
+        app:layout_constraintStart_toEndOf="@+id/minusOneDay"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/plusOneDay"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="2dp"
+        android:visibility="visible"
+        android:backgroundTint="@color/date_buttons_background_color"
+        android:fontFamily="@font/roboto"
+        android:text="@string/_22"
+        android:textColor="@color/text_color"
+        android:textSize="12sp"
+        app:cornerRadius="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/plusTwoDays"
+        app:layout_constraintStart_toEndOf="@+id/todayButton"
+        app:layout_constraintTop_toTopOf="@id/todayButton" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/plusTwoDays"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="2dp"
+        android:visibility="visible"
+        android:backgroundTint="@color/date_buttons_background_color"
+        android:fontFamily="@font/roboto"
+        android:text="@string/_23"
+        android:textColor="@color/text_color"
+        android:textSize="12sp"
+        app:cornerRadius="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/plusThreeDays"
+        app:layout_constraintStart_toEndOf="@+id/plusOneDay"
+        app:layout_constraintTop_toTopOf="@id/todayButton" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/plusThreeDays"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="2dp"
+        android:visibility="visible"
+        android:backgroundTint="@color/date_buttons_background_color"
+        android:fontFamily="@font/roboto"
+        android:text="@string/_24"
+        android:textColor="@color/text_color"
+        android:textSize="12sp"
+        app:cornerRadius="8dp"
+        app:layout_constraintEnd_toEndOf="@id/taskListHomeScreenRv"
+        app:layout_constraintStart_toEndOf="@+id/plusTwoDays"
+        app:layout_constraintTop_toTopOf="@id/todayButton" />
+
+    <include
+        android:id="@+id/taskStatusButtonGroup"
+        layout="@layout/task_status_button_group"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/todayButton" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/taskListHomeScreenRv"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="6dp"
+        android:padding="10dp"
+        android:scrollbarStyle="outsideOverlay"
+        android:layout_marginBottom="50dp"
+        android:scrollbarFadeDuration="@integer/material_motion_duration_short_2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/taskStatusButtonGroup"
+        tools:listitem="@layout/calendar_task_list_item" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="70dp"
+        android:layout_height="80dp"
+        android:indeterminateTint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/noTaskTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/create_your_first_task"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
