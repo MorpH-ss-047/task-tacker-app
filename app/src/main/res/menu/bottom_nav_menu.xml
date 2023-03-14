@@ -5,10 +5,10 @@
         android:id="@+id/navigation_home"
         android:icon="@drawable/home_vector"
         android:title="@string/home" />
-    <item
-        android:id="@+id/navigation_calendar"
-        android:icon="@drawable/calender_vector"
-        android:title="@string/calendar" />
+<!--    <item-->
+<!--        android:id="@+id/navigation_calendar"-->
+<!--        android:icon="@drawable/calender_vector"-->
+<!--        android:title="@string/calendar" />-->
 
     <item
         android:id="@+id/navigation_notes"

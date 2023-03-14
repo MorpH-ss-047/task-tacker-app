@@ -85,7 +85,6 @@
             android:layout_height="50dp"
             android:background="@color/white"
             app:boxStrokeWidth="0dp"
-            app:boxStrokeWidthFocused="0dp"
             app:hintEnabled="false"
             app:passwordToggleEnabled="true">
 

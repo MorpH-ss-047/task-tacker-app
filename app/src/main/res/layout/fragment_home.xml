@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:layoutDescription="@xml/fragment_home_scene"
     tools:context=".fragments.HomeFragment">
 
 
@@ -12,12 +13,12 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginHorizontal="2dp"
-        android:visibility="visible"
         android:backgroundTint="@color/date_buttons_background_color"
         android:fontFamily="@font/roboto"
         android:text="@string/_17"
         android:textColor="@color/text_color"
         android:textSize="12sp"
+        android:visibility="visible"
         app:cornerRadius="8dp"
         app:layout_constraintEnd_toStartOf="@id/minusTwoDays"
         app:layout_constraintStart_toStartOf="@id/taskListHomeScreenRv"
@@ -28,12 +29,12 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginHorizontal="2dp"
-        android:visibility="visible"
         android:backgroundTint="@color/date_buttons_background_color"
         android:fontFamily="@font/roboto"
         android:text="@string/_19"
         android:textColor="@color/text_color"
         android:textSize="12sp"
+        android:visibility="visible"
         app:cornerRadius="8dp"
         app:layout_constraintEnd_toStartOf="@+id/minusOneDay"
         app:layout_constraintStart_toEndOf="@+id/minusThreeDays"
@@ -44,12 +45,12 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginHorizontal="2dp"
-        android:visibility="visible"
         android:backgroundTint="@color/date_buttons_background_color"
         android:fontFamily="@font/roboto"
         android:text="@string/_20"
         android:textColor="@color/text_color"
         android:textSize="12sp"
+        android:visibility="visible"
         app:cornerRadius="8dp"
         app:layout_constraintEnd_toStartOf="@+id/todayButton"
         app:layout_constraintStart_toEndOf="@+id/minusTwoDays"
@@ -61,15 +62,15 @@
         android:layout_width="80dp"
         android:layout_height="48dp"
         android:layout_marginHorizontal="2dp"
-        android:layout_marginTop="16dp"
-        android:visibility="visible"
+        android:layout_marginTop="8dp"
         android:backgroundTint="@color/date_buttons_background_color"
         android:fontFamily="@font/roboto"
         android:text="@string/today"
         android:textColor="@color/text_color"
         android:textSize="12sp"
-        app:layout_constraintEnd_toStartOf="@+id/plusOneDay"
-        app:layout_constraintStart_toEndOf="@+id/minusOneDay"
+        android:visibility="visible"
+        app:layout_constraintEnd_toStartOf="@id/plusOneDay"
+        app:layout_constraintStart_toEndOf="@id/minusOneDay"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.button.MaterialButton
@@ -77,12 +78,12 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginHorizontal="2dp"
-        android:visibility="visible"
         android:backgroundTint="@color/date_buttons_background_color"
         android:fontFamily="@font/roboto"
         android:text="@string/_22"
         android:textColor="@color/text_color"
         android:textSize="12sp"
+        android:visibility="visible"
         app:cornerRadius="8dp"
         app:layout_constraintEnd_toStartOf="@+id/plusTwoDays"
         app:layout_constraintStart_toEndOf="@+id/todayButton"
@@ -93,12 +94,12 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginHorizontal="2dp"
-        android:visibility="visible"
         android:backgroundTint="@color/date_buttons_background_color"
         android:fontFamily="@font/roboto"
         android:text="@string/_23"
         android:textColor="@color/text_color"
         android:textSize="12sp"
+        android:visibility="visible"
         app:cornerRadius="8dp"
         app:layout_constraintEnd_toStartOf="@+id/plusThreeDays"
         app:layout_constraintStart_toEndOf="@+id/plusOneDay"
@@ -109,16 +110,40 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginHorizontal="2dp"
-        android:visibility="visible"
         android:backgroundTint="@color/date_buttons_background_color"
         android:fontFamily="@font/roboto"
         android:text="@string/_24"
         android:textColor="@color/text_color"
         android:textSize="12sp"
+        android:visibility="visible"
         app:cornerRadius="8dp"
         app:layout_constraintEnd_toEndOf="@id/taskListHomeScreenRv"
         app:layout_constraintStart_toEndOf="@+id/plusTwoDays"
         app:layout_constraintTop_toTopOf="@id/todayButton" />
+
+    <ImageView
+        android:id="@+id/showCalendarButton"
+        android:layout_width="30dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="16dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/calender_vector"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/taskStatusButtonGroup"
+        app:tint="@color/white"
+        android:contentDescription="@string/show_calendar_button" />
+
+    <CalendarView
+        android:id="@id/calendarView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/calendar_background"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <include
         android:id="@+id/taskStatusButtonGroup"
@@ -126,7 +151,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/showCalendarButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/todayButton" />
 
@@ -135,14 +160,16 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginHorizontal="6dp"
-        android:padding="10dp"
-        android:scrollbarStyle="outsideOverlay"
         android:layout_marginBottom="50dp"
+        android:padding="10dp"
         android:scrollbarFadeDuration="@integer/material_motion_duration_short_2"
+        android:scrollbarStyle="outsideOverlay"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/taskStatusButtonGroup"
+        app:layout_constraintVertical_bias="0.0"
         tools:listitem="@layout/calendar_task_list_item" />
 
     <ProgressBar
@@ -153,12 +180,13 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/taskListHomeScreenRv" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/noTaskTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="481dp"
         android:text="@string/create_your_first_task"
         android:textColor="@color/white"
         android:textSize="20sp"
@@ -166,6 +194,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/taskStatusButtonGroup" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.motion.widget.MotionLayout>

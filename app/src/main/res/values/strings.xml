@@ -215,5 +215,6 @@
     <string name="_23">23</string>
     <string name="_24">24</string>
     <string name="_17">17</string>
+    <string name="show_calendar_button">Show Calendar Button</string>
 
 </resources>

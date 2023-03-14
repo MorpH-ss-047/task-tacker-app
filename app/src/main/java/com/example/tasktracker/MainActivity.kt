@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment
 import com.example.tasktracker.authentication.phone.PhoneLoginActivity
 import com.example.tasktracker.databinding.ActivityMainBinding
 import com.example.tasktracker.databinding.ProfileAtTopBinding
-import com.example.tasktracker.fragments.CalendarFragment
 import com.example.tasktracker.fragments.HomeFragment
 import com.example.tasktracker.fragments.NoteFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -134,11 +133,11 @@ class MainActivity : AppCompatActivity() {
                     replaceFragment(fragment)
                     true
                 }
-                R.id.navigation_calendar -> {
-                    val fragment = CalendarFragment()
-                    replaceFragment(fragment)
-                    true
-                }
+//                R.id.navigation_calendar -> {
+//                    val fragment = CalendarFragment()
+//                    replaceFragment(fragment)
+//                    true
+//                }
                 R.id.navigation_notes -> {
                     val fragment = NoteFragment()
                     replaceFragment(fragment)
@@ -201,10 +200,10 @@ class MainActivity : AppCompatActivity() {
                 val fragment = HomeFragment()
                 replaceFragment(fragment)
             }
-            R.id.navigation_calendar -> {
-                val fragment = CalendarFragment()
-                replaceFragment(fragment)
-            }
+//            R.id.navigation_calendar -> {
+//                val fragment = CalendarFragment()
+//                replaceFragment(fragment)
+//            }
             R.id.navigation_notes -> {
                 val fragment = NoteFragment()
                 replaceFragment(fragment)

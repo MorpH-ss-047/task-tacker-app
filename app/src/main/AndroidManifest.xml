@@ -27,15 +27,19 @@
             android:exported="false" />
         <activity
             android:name=".authentication.email.EmailLoginActivity"
+            android:theme="@style/Theme.TaskTrackerWhiteStatusBar"
             android:exported="false" />
         <activity
             android:name=".authentication.email.EmailSignupActivity"
+            android:theme="@style/Theme.TaskTrackerWhiteStatusBar"
             android:exported="false" />
         <activity
             android:name=".authentication.phone.OTPActivity"
+            android:theme="@style/Theme.TaskTrackerWhiteStatusBar"
             android:exported="false" />
         <activity
             android:name=".authentication.phone.PhoneLoginActivity"
+            android:theme="@style/Theme.TaskTrackerWhiteStatusBar"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

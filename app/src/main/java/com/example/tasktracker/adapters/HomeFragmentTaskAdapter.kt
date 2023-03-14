@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tasktracker.R
+import com.example.tasktracker.Utils
 import com.example.tasktracker.data.TaskData
 import com.example.tasktracker.databinding.CalendarTaskListItemBinding
 
@@ -13,6 +14,8 @@ class HomeFragmentTaskAdapter(private val taskList: ArrayList<TaskData>) :
     RecyclerView.Adapter<HomeFragmentTaskAdapter.TaskViewHolder>() {
 
     private val TAG = "HomeFragmentTaskAdapter"
+    private var utils = Utils()
+
     private var listener: OnItemClickListenerInterface? = null
 
     fun setItemOnClickListener(listener: OnItemClickListenerInterface) {
@@ -62,13 +65,13 @@ class HomeFragmentTaskAdapter(private val taskList: ArrayList<TaskData>) :
                 }
             )
             taskStatusCb.isChecked = taskList[position].completed
-            val date = taskList[position].endDate?.split(" ")
+            val date = taskList[position].endDate?.split("-")
 
             taskStatusCb.isClickable = false
 
 //            Log.d(TAG, "$position  ${taskList[position].endDate?: "null"}: ${date?: "null"}")
             taskEndDateTv.text = buildString {
-                append(date?.get(1)?.slice(0..2))
+                append(utils.monthMap[date?.get(1)?.toInt()]?.slice(0..2))
                 append(" ")
                 append(date?.get(0))
             }

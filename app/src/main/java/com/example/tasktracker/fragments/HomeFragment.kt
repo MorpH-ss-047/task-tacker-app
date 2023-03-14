@@ -1,5 +1,6 @@
 package com.example.tasktracker.fragments
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.icu.text.DateFormat
 import android.icu.text.SimpleDateFormat
@@ -10,6 +11,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.CalendarView
+import android.widget.ImageView
 import android.widget.ProgressBar
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -26,16 +29,15 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class HomeFragment : Fragment(), HomeFragmentTaskAdapter.OnItemClickListenerInterface {
 
 
     private var TAG = "HomeFragment"
-    private var currentYear: Int = 2023
-    private var currentMonth: Int = 0
-    private var currentDay: Int = 1
-    private lateinit var currentDate: String
-    private lateinit var selectedDate: String
+    private lateinit var currentDate: LocalDate
+    private lateinit var selectedDate: LocalDate
     private lateinit var utils: Utils
 
     private lateinit var binding: FragmentHomeBinding
@@ -53,10 +55,9 @@ class HomeFragment : Fragment(), HomeFragmentTaskAdapter.OnItemClickListenerInte
     private lateinit var authId: String
     private lateinit var dbReference: DatabaseReference
 
-    private lateinit var date: String
     private lateinit var calendar: Calendar
     private lateinit var onlyDateFormatter: DateFormat
-    private lateinit var dateFormatter: DateFormat
+    private lateinit var dateFormatter: DateTimeFormatter
 
 
     private lateinit var minusOneDayButton: MaterialButton
@@ -66,11 +67,13 @@ class HomeFragment : Fragment(), HomeFragmentTaskAdapter.OnItemClickListenerInte
     private lateinit var plusOneDayButton: MaterialButton
     private lateinit var plusTwoDaysButton: MaterialButton
     private lateinit var plusThreeDaysButton: MaterialButton
+    private lateinit var showCalendarButton: ImageView
     private lateinit var completedButtonTv: Button
     private lateinit var pendingButtonTv: Button
     private lateinit var allTasksButtonTv: Button
     private lateinit var selectedButton: MaterialButton
     private lateinit var progressBar: ProgressBar
+    private lateinit var calendarView: CalendarView
 
 
     override fun onCreateView(
@@ -96,6 +99,26 @@ class HomeFragment : Fragment(), HomeFragmentTaskAdapter.OnItemClickListenerInte
 
     private fun init() {
 
+//        val date0 = "01 June 2021"
+//        val date1 = "01 June 2023"
+//        val date2 = "01 June 2023"
+//
+//        val localDate0 = LocalDate.parse(date0, DateTimeFormatter.ofPattern("dd MMMM yyyy"))
+//        val localDate1 = LocalDate.parse(date1, DateTimeFormatter.ofPattern("dd MMMM yyyy"))
+//        val localDate2 = LocalDate.parse(date2, DateTimeFormatter.ofPattern("dd MMMM yyyy"))
+//
+//        if ((localDate1.isAfter(localDate0) && localDate1.isBefore(localDate2)) || localDate1.isEqual(localDate0) || localDate1.isEqual(localDate2)) {
+//            Log.d(TAG, "Date is in range")
+//            Log.d(TAG, localDate1.toString())
+//        } else {
+//            Log.d(TAG, "Date not in range")
+//        }
+//
+//        val lDate = LocalDate.now().minusDays(6).format(DateTimeFormatter.ofPattern("dd"))
+//        Log.d(TAG, localDate0.format(DateTimeFormatter.ofPattern("dd MM yyyy")).toString() + ", " + localDate0.dayOfWeek.toString())
+//        Log.d(TAG, lDate.value.toString())
+
+
         utils = Utils()
         taskListHomeScreenRv = binding.taskListHomeScreenRv
         minusOneDayButton = binding.minusOneDay
@@ -110,6 +133,9 @@ class HomeFragment : Fragment(), HomeFragmentTaskAdapter.OnItemClickListenerInte
         pendingButtonTv = binding.taskStatusButtonGroup.pendingButtonTv
         allTasksButtonTv = binding.taskStatusButtonGroup.allTasksButtonTv
         progressBar = binding.progressBar
+        showCalendarButton = binding.showCalendarButton
+        calendarView = binding.calendarView
+
 
         auth = FirebaseAuth.getInstance()
         authId = auth.currentUser!!.uid
@@ -117,18 +143,11 @@ class HomeFragment : Fragment(), HomeFragmentTaskAdapter.OnItemClickListenerInte
             .child(authId).child("tasks")
 
         calendar = Calendar.getInstance()
-        currentYear = calendar.get(Calendar.YEAR)
-        currentMonth = calendar.get(Calendar.MONTH)
-        currentDay = calendar.get(Calendar.DAY_OF_MONTH)
-        currentDate = "$currentDay ${utils.monthMap[currentMonth]} $currentYear"
+        dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+        currentDate = LocalDate.now()
         selectedDate = currentDate
         onlyDateFormatter = SimpleDateFormat.getPatternInstance("dd")
-        dateFormatter = SimpleDateFormat.getPatternInstance("dd/MM/yyyy")
 
-
-        val currentDateTime = Calendar.getInstance().time
-        date =
-            SimpleDateFormat.getPatternInstance("dd/MM/yyyy").format(currentDateTime)
 
         setDates()
 
@@ -155,10 +174,10 @@ class HomeFragment : Fragment(), HomeFragmentTaskAdapter.OnItemClickListenerInte
         Log.d(TAG, "CompletedTaskList size: ${completedTaskList.size}")
     }
 
-    private fun updateCompletedTaskList(selectedDate: String) {
+    private fun updateCompletedTaskList(selectedDate: LocalDate) {
         updateCompletedTaskList()
         filteredCompletedTaskList = completedTaskList.filter {
-            it.endDate?.split(",")?.get(0) == selectedDate
+            filterTaskItem(it, selectedDate)
         } as ArrayList<TaskData>
         Log.d(TAG, "filteredCompletedTaskList size: ${filteredCompletedTaskList.size}")
 
@@ -170,17 +189,72 @@ class HomeFragment : Fragment(), HomeFragmentTaskAdapter.OnItemClickListenerInte
 
     }
 
-    private fun updatePendingTaskList(date: String) {
+    private fun updatePendingTaskList(selectedDate: LocalDate) {
         updatePendingTaskList()
         filteredPendingTaskList = pendingTaskList.filter {
-            it.endDate?.split(",")?.get(0) == date
+            filterTaskItem(it, selectedDate)
         } as ArrayList<TaskData>
 
-        Log.d(TAG, "filteredCompletedTaskList size: ${filteredCompletedTaskList.size}")
+        Log.d(TAG, "filteredPendingTaskList size: ${filteredPendingTaskList.size}")
 
     }
 
+    @SuppressLint("SetTextI18n")
     private fun registerEvents() {
+
+
+       calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
+            selectedDate = LocalDate.of(year, month + 1, dayOfMonth)
+
+            when(selectedDate.compareTo(currentDate)){
+                0 -> {
+                    setButtonSelected(todayButton)
+                }
+                -1 -> {
+                    setButtonSelected(minusOneDayButton)
+                }
+                -2 -> {
+                    setButtonSelected(minusTwoDaysButton)
+                }
+                -3 -> {
+                    setButtonSelected(minusThreeDaysButton)
+                }
+                1 -> {
+                    setButtonSelected(plusOneDayButton)
+                }
+                2 -> {
+                    setButtonSelected(plusTwoDaysButton)
+                }
+                3 -> {
+                    setButtonSelected(plusThreeDaysButton)
+                }
+
+                else -> {
+                    removeButtonSelected()
+                }
+            }
+
+            Log.d(TAG, "Selected date: $selectedDate")
+            updateCompletedTaskList(selectedDate)
+            updatePendingTaskList(selectedDate)
+            if (allTasksButtonTv.isSelected) {
+                (taskListCopy.filter {
+                    filterTaskItem(it, selectedDate)
+                } as ArrayList<TaskData>).let {
+                    if(it.isEmpty() && !progressBar.isVisible) {
+                        binding.noTaskTv.visibility = View.VISIBLE
+                        binding.noTaskTv.text = "No tasks for $selectedDate"
+                    }
+                    else binding.noTaskTv.visibility = View.GONE
+                    homeFragmentTaskAdapter.updateTaskList(it)
+                }
+            } else if (completedButtonTv.isSelected) {
+                homeFragmentTaskAdapter.updateTaskList(filteredCompletedTaskList)
+            } else if (pendingButtonTv.isSelected) {
+                homeFragmentTaskAdapter.updateTaskList(filteredPendingTaskList)
+            }
+        }
+
         minusOneDayButton.setOnClickListener {
             dateButtonClickListener(it as MaterialButton)
         }
@@ -205,80 +279,44 @@ class HomeFragment : Fragment(), HomeFragmentTaskAdapter.OnItemClickListenerInte
 
         completedButtonTv.setOnClickListener {
             setTvSelected(it as Button)
-            when (selectedButton) {
-                minusOneDayButton -> {
-                    dateButtonClickListener(minusOneDayButton)
-                }
-                minusTwoDaysButton -> {
-                    dateButtonClickListener(minusTwoDaysButton)
-                }
-                minusThreeDaysButton -> {
-                    dateButtonClickListener(minusThreeDaysButton)
-                }
-                todayButton -> {
-                    dateButtonClickListener(todayButton)
-                }
-                plusOneDayButton -> {
-                    dateButtonClickListener(plusOneDayButton)
-                }
-                plusTwoDaysButton -> {
-                    dateButtonClickListener(plusTwoDaysButton)
-                }
-                plusThreeDaysButton -> {
-                    dateButtonClickListener(plusThreeDaysButton)
-                }
+            Log.d(TAG, "Completed button clicked: $selectedDate")
+            updateCompletedTaskList(selectedDate)
+            if (filteredCompletedTaskList.isEmpty() && !progressBar.isVisible) {
+                binding.noTaskTv.visibility = View.VISIBLE
+                binding.noTaskTv.text = "No completed tasks for $selectedDate"
+            } else {
+                binding.noTaskTv.visibility = View.GONE
             }
+
+            homeFragmentTaskAdapter.updateTaskList(filteredCompletedTaskList)
         }
         pendingButtonTv.setOnClickListener {
+            Log.d(TAG, "Completed button clicked: $selectedDate")
             setTvSelected(it as Button)
-            when (selectedButton) {
-                minusOneDayButton -> {
-                    dateButtonClickListener(minusOneDayButton)
-                }
-                minusTwoDaysButton -> {
-                    dateButtonClickListener(minusTwoDaysButton)
-                }
-                minusThreeDaysButton -> {
-                    dateButtonClickListener(minusThreeDaysButton)
-                }
-                todayButton -> {
-                    dateButtonClickListener(todayButton)
-                }
-                plusOneDayButton -> {
-                    dateButtonClickListener(plusOneDayButton)
-                }
-                plusTwoDaysButton -> {
-                    dateButtonClickListener(plusTwoDaysButton)
-                }
-                plusThreeDaysButton -> {
-                    dateButtonClickListener(plusThreeDaysButton)
-                }
+            updatePendingTaskList(selectedDate)
+
+            if (filteredPendingTaskList.isEmpty() && !progressBar.isVisible) {
+                binding.noTaskTv.visibility = View.VISIBLE
+                binding.noTaskTv.text = "No pending tasks for $selectedDate"
+            } else {
+                binding.noTaskTv.visibility = View.GONE
             }
+
+            homeFragmentTaskAdapter.updateTaskList(filteredPendingTaskList)
         }
-        allTasksButtonTv.setOnClickListener {
-            setTvSelected(it as Button)
-            when (selectedButton) {
-                minusOneDayButton -> {
-                    dateButtonClickListener(minusOneDayButton)
+        allTasksButtonTv.setOnClickListener { btn ->
+            Log.d(TAG, "Completed button clicked: $selectedDate")
+            setTvSelected(btn as Button)
+
+            (taskListCopy.filter { taskItem ->
+                filterTaskItem(taskItem, selectedDate)
+            } as ArrayList<TaskData>).let {
+                if(it.isEmpty() && !progressBar.isVisible) {
+                    binding.noTaskTv.visibility = View.VISIBLE
+                    binding.noTaskTv.text = "No tasks for $selectedDate"
                 }
-                minusTwoDaysButton -> {
-                    dateButtonClickListener(minusTwoDaysButton)
-                }
-                minusThreeDaysButton -> {
-                    dateButtonClickListener(minusThreeDaysButton)
-                }
-                todayButton -> {
-                    dateButtonClickListener(todayButton)
-                }
-                plusOneDayButton -> {
-                    dateButtonClickListener(plusOneDayButton)
-                }
-                plusTwoDaysButton -> {
-                    dateButtonClickListener(plusTwoDaysButton)
-                }
-                plusThreeDaysButton -> {
-                    dateButtonClickListener(plusThreeDaysButton)
-                }
+                else binding.noTaskTv.visibility = View.GONE
+                homeFragmentTaskAdapter.updateTaskList(it)
             }
         }
 
@@ -331,22 +369,18 @@ class HomeFragment : Fragment(), HomeFragmentTaskAdapter.OnItemClickListenerInte
 
     }
 
+    @SuppressLint("SetTextI18n")
     private fun dateButtonClickListener(button: MaterialButton) {
         setButtonSelected(button)
-        selectedDate = buildString {
-            append(currentDay + button.tag.toString().toInt())
-            append(" ")
-            append(utils.monthMap[currentMonth])
-            append(" ")
-            append(currentYear)
-        }
+        selectedDate = LocalDate.now().minusDays(selectedButton.tag.toString().toLong())
         Log.d(TAG, "dateButtonClickListener: selectedDate = $selectedDate")
         updatePendingTaskList(selectedDate)
         updateCompletedTaskList(selectedDate)
 
         if (allTasksButtonTv.isSelected) {
             (taskListCopy.filter {
-                it.endDate?.split(",")?.get(0) == selectedDate
+                filterTaskItem(it, selectedDate)
+
             } as ArrayList<TaskData>).let {
                 if(it.isEmpty() && !progressBar.isVisible) {
                     binding.noTaskTv.visibility = View.VISIBLE
@@ -374,11 +408,27 @@ class HomeFragment : Fragment(), HomeFragmentTaskAdapter.OnItemClickListenerInte
         }
     }
 
+    private fun filterTaskItem(taskData: TaskData, selectedDate: LocalDate): Boolean {
+        val startDate = LocalDate.parse(taskData.startDate?.split(",")?.get(0), dateFormatter)
+        val endDate = LocalDate.parse(taskData.endDate?.split(",")?.get(0), dateFormatter)
+        return (startDate.isBefore(selectedDate) && endDate.isAfter(selectedDate)) || startDate.isEqual(selectedDate)  || endDate.isEqual(selectedDate)
+    }
+
     private fun setTvSelected(tv: Button) {
         allTasksButtonTv.isSelected = false
         pendingButtonTv.isSelected = false
         completedButtonTv.isSelected = false
         tv.isSelected = true
+    }
+
+    private fun removeButtonSelected() {
+        minusOneDayButton.isSelected = false
+        minusTwoDaysButton.isSelected = false
+        minusThreeDaysButton.isSelected = false
+        todayButton.isSelected = false
+        plusOneDayButton.isSelected = false
+        plusTwoDaysButton.isSelected = false
+        plusThreeDaysButton.isSelected = false
     }
 
     private fun setButtonSelected(button: MaterialButton) {
@@ -439,6 +489,7 @@ class HomeFragment : Fragment(), HomeFragmentTaskAdapter.OnItemClickListenerInte
 
     private fun getTaskFromFirebase() {
         dbReference.addValueEventListener(object : ValueEventListener {
+            @SuppressLint("SetTextI18n")
             override fun onDataChange(snapshot: DataSnapshot) {
                 progressBar.visibility = View.VISIBLE
 
@@ -474,6 +525,7 @@ class HomeFragment : Fragment(), HomeFragmentTaskAdapter.OnItemClickListenerInte
 
                 homeFragmentTaskAdapter.notifyItemRangeChanged(0, taskList.size)
                 progressBar.visibility = View.GONE
+                Log.d(TAG, "onDataChange: progress bar gone")
                 if (taskList.isEmpty()) {
                     binding.noTaskTv.visibility = View.VISIBLE
                 } else {
@@ -491,9 +543,17 @@ class HomeFragment : Fragment(), HomeFragmentTaskAdapter.OnItemClickListenerInte
                     updatePendingTaskList(selectedDate)
 
                     if (allTasksButtonTv.isSelected) {
-                        homeFragmentTaskAdapter.updateTaskList(taskListCopy.filter {
-                            it.endDate?.split(",")?.get(0) == selectedDate
-                        } as ArrayList<TaskData>)
+                        (taskListCopy.filter {
+                            filterTaskItem(it, selectedDate)
+                        } as ArrayList<TaskData>).let {
+                            if(it.isEmpty() && !progressBar.isVisible) {
+                                binding.noTaskTv.visibility = View.VISIBLE
+                                binding.noTaskTv.text = "No tasks for $selectedDate"
+                            }
+                            else binding.noTaskTv.visibility = View.GONE
+                            homeFragmentTaskAdapter.updateTaskList(it)
+
+                        }
                     } else if (pendingButtonTv.isSelected) {
                         homeFragmentTaskAdapter.updateTaskList(filteredPendingTaskList)
                     } else if (completedButtonTv.isSelected) {
@@ -545,6 +605,9 @@ class HomeFragment : Fragment(), HomeFragmentTaskAdapter.OnItemClickListenerInte
         homeFragmentTaskAdapter.notifyItemRemoved(position)
 //        }
     }
+
+
+
 
 
 }

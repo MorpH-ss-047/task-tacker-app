@@ -56,7 +56,6 @@
                 android:layout_height="match_parent"
                 android:layout_toEndOf="@id/countryCodeCard"
                 app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp"
                 android:padding="4dp"
                 app:hintEnabled="false">
 

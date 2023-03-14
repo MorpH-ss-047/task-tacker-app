@@ -20,6 +20,8 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class AddTaskActivity : AppCompatActivity() {
@@ -43,7 +45,7 @@ class AddTaskActivity : AppCompatActivity() {
     private lateinit var dbReference: DatabaseReference
 
     private lateinit var taskData: TaskData
-
+    private lateinit var dateFormatter: DateTimeFormatter
 
     private lateinit var utils: Utils
 
@@ -70,6 +72,7 @@ class AddTaskActivity : AppCompatActivity() {
         taskTitleEt = binding.taskTitleEt
         taskDescriptionEt = binding.taskDescriptionEt
         radioGroup = binding.radioGroup
+        dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
 
         utils = Utils()
         auth = FirebaseAuth.getInstance()
@@ -79,6 +82,9 @@ class AddTaskActivity : AppCompatActivity() {
 
 
         newTask = intent.getBooleanExtra("newTask", true)
+        taskStartDate = LocalDate.now().format(dateFormatter)
+        taskEndDate = LocalDate.now().format(dateFormatter)
+
 
         if (!newTask) {
             // set title in toolbar, hide save button and calender button
@@ -178,6 +184,7 @@ class AddTaskActivity : AppCompatActivity() {
                     append(", ")
                     append(utils.dayMap[calendar.get(Calendar.DAY_OF_WEEK)])
                 }
+                taskStartDate = LocalDate.of(year, month + 1, dayOfMonth).format(dateFormatter)
                 binding.startDateTv.setTextColor(getColor(R.color.black))
             }, currentYear, currentMonth, currentDay).show()
         }
@@ -206,13 +213,12 @@ class AddTaskActivity : AppCompatActivity() {
                 }
 
                 binding.startDateTv.setTextColor(getColor(R.color.black))
+                taskEndDate = LocalDate.of(year, month + 1, dayOfMonth).format(dateFormatter)
             }, currentYear, currentMonth, currentDay).show()
         }
         binding.saveTaskButton.setOnClickListener {
             taskTitle = taskTitleEt.text.toString()
             taskDescription = taskDescriptionEt.text.toString()
-            taskStartDate = binding.startDateTv.text.toString()
-            taskEndDate = binding.endDateTv.text.toString()
             when (radioGroup.checkedRadioButtonId) {
                 R.id.lowPriority -> taskPriority = "Low"
                 R.id.normalPriority -> taskPriority = "Normal"
