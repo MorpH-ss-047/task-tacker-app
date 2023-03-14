@@ -26,6 +26,9 @@ import java.util.*
 
 class AddTaskActivity : AppCompatActivity() {
 
+
+    private val TAG = "AddTaskActivity"
+
     private val calendar: Calendar = Calendar.getInstance()
     private lateinit var binding: ActivityAddTaskBinding
     private var newTask: Boolean = true
@@ -134,6 +137,10 @@ class AddTaskActivity : AppCompatActivity() {
             // set title in toolbar
             supportActionBar?.title = getString(R.string.create_task)
 
+
+            taskStartDate = LocalDate.now().format(dateFormatter)
+            taskEndDate = LocalDate.now().format(dateFormatter)
+
             binding.startDateTv.text = buildString {
                 append(calendar.get(Calendar.DAY_OF_MONTH).toString())
                 append(" ")
@@ -214,6 +221,19 @@ class AddTaskActivity : AppCompatActivity() {
 
                 binding.startDateTv.setTextColor(getColor(R.color.black))
                 taskEndDate = LocalDate.of(year, month + 1, dayOfMonth).format(dateFormatter)
+                if (LocalDate.parse(taskStartDate, dateFormatter) > LocalDate.parse(
+                        taskEndDate,
+                        dateFormatter
+                    )
+                ) {
+                    binding.endDateTv.setTextColor(getColor(R.color.red))
+                    binding.endDateTv.error = "End date must be greater than start date"
+                    Snackbar.make(binding.root,"End date must be greater than start date",Snackbar.LENGTH_SHORT).show()
+                } else {
+                    binding.endDateTv.setTextColor(getColor(R.color.black))
+                    binding.endDateTv.error = null
+                }
+
             }, currentYear, currentMonth, currentDay).show()
         }
         binding.saveTaskButton.setOnClickListener {
@@ -225,8 +245,15 @@ class AddTaskActivity : AppCompatActivity() {
                 R.id.criticalPriority -> taskPriority = "Critical"
             }
 
-
-            if (taskTitle.isNotEmpty() && taskDescription.isNotEmpty() && taskStartDate.isNotEmpty() && taskEndDate.isNotEmpty()) {
+            Log.d(TAG, "$taskStartDate, $taskEndDate")
+            if (taskTitle.isNotEmpty() && taskDescription.isNotEmpty() && (LocalDate.parse(
+                    taskStartDate,
+                    dateFormatter
+                ).isBefore(LocalDate.parse(taskEndDate, dateFormatter)) || LocalDate.parse(
+                    taskStartDate,
+                    dateFormatter
+                ).isEqual(LocalDate.parse(taskEndDate, dateFormatter)))
+            ) {
                 AlertDialog.Builder(this)
                     .setTitle("Save Task")
                     .setMessage("Are you sure you want to save this task?")
@@ -289,11 +316,25 @@ class AddTaskActivity : AppCompatActivity() {
                 Snackbar.make(binding.root, "Task end date is required", Snackbar.LENGTH_SHORT)
                     .show()
                 return@setOnClickListener
+            } else if (LocalDate.parse(taskStartDate, dateFormatter) > LocalDate.parse(
+                    taskEndDate,
+                    dateFormatter
+                )
+            ) {
+                binding.endDateTv.setTextColor(getColor(R.color.red))
+                binding.endDateTv.error = "End date must be greater than start date"
+                Snackbar.make(
+                    binding.root,
+                    "Task end date must be greater than start date",
+                    Snackbar.LENGTH_SHORT
+                )
+                    .show()
+                return@setOnClickListener
             }
 
 
         }
-        onBackPressedDispatcher.addCallback(this, object: OnBackPressedCallback(true) {
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 handleBackPressed()
                 finish()
@@ -398,7 +439,7 @@ class AddTaskActivity : AppCompatActivity() {
 
     }
 
-    private fun handleBackPressed(){
+    private fun handleBackPressed() {
         if (!newTask) {
 
             if (taskTitleEt.text.toString() != taskTitle || taskDescriptionEt.text.toString() != taskDescription || binding.startDateTv.text.toString() != taskStartDate || binding.endDateTv.text.toString() != taskEndDate || when (radioGroup.checkedRadioButtonId) {
@@ -422,19 +463,21 @@ class AddTaskActivity : AppCompatActivity() {
             } else {
                 finish()
             }
-        }
-        else /* new task == true */ {
-            if (taskTitleEt.text.toString().isNotEmpty() || taskDescriptionEt.text.toString().isNotEmpty()) {                      AlertDialog.Builder(this)
-                .setTitle("Exit")
-                .setMessage("Are you sure you want to exit without saving?")
-                .setPositiveButton("Yes") { _, _ ->
-                    Toast.makeText(this, "Task not saved", Toast.LENGTH_SHORT).show()
-                    finish()
-                }
-                .setNegativeButton("No") { dialog, _ ->
-                    dialog.dismiss()
-                }
-                .show()
+        } else /* new task == true */ {
+            if (taskTitleEt.text.toString().isNotEmpty() || taskDescriptionEt.text.toString()
+                    .isNotEmpty()
+            ) {
+                AlertDialog.Builder(this)
+                    .setTitle("Exit")
+                    .setMessage("Are you sure you want to exit without saving?")
+                    .setPositiveButton("Yes") { _, _ ->
+                        Toast.makeText(this, "Task not saved", Toast.LENGTH_SHORT).show()
+                        finish()
+                    }
+                    .setNegativeButton("No") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
             } else /* no changes made by the user */ {
                 finish()
             }

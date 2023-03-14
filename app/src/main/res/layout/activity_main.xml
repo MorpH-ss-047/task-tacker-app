@@ -73,7 +73,6 @@
             android:backgroundTint="@color/colorTheme"
             android:contentDescription="@string/add_task"
             android:src="@drawable/baseline_add_24"
-            android:tint="@color/colorTheme"
             app:elevation="8dp"
             app:fabCustomSize="70dp"
             app:layout_anchor="@id/bottomAppBar"
@@ -94,6 +93,19 @@
             app:layout_anchorGravity="center_vertical|top"
             app:srcCompat="@drawable/add_note_icon" />
 
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/addNoteToolTip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_note"
+            android:textColor="@color/white"
+            android:visibility="invisible"
+            android:textSize="16sp"
+            app:layout_anchor="@id/addNoteFab"
+            app:layout_anchorGravity="center"
+            android:layout_marginEnd="100dp"
+            />
+
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/addTaskFab"
             android:layout_width="wrap_content"
@@ -108,7 +120,18 @@
             app:layout_anchorGravity="center_vertical|top"
             app:srcCompat="@drawable/add_new_task" />
 
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/addTaskToolTip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_task"
+            android:visibility="invisible"
+            android:textColor="@color/white"
+            app:layout_anchor="@id/addTaskFab"
+            android:textSize="16sp"
+            app:layout_anchorGravity="center_vertical|left"
+            android:layout_marginEnd="100dp"
+            />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,6 +17,7 @@ import com.example.tasktracker.fragments.HomeFragment
 import com.example.tasktracker.fragments.NoteFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textview.MaterialTextView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
@@ -29,6 +30,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fab: FloatingActionButton
     private lateinit var addNoteFab: FloatingActionButton
     private lateinit var addTaskFab: FloatingActionButton
+    private lateinit var addTaskToolTip: MaterialTextView
+    private lateinit var addNoteToolTip: MaterialTextView
 
     private val rotateOpen: Animation by lazy {
         AnimationUtils.loadAnimation(this, R.anim.rotate_open_animation)
@@ -150,6 +153,8 @@ class MainActivity : AppCompatActivity() {
         fab = binding.fab
         addNoteFab = binding.addNoteFab
         addTaskFab = binding.addTaskFab
+        addNoteToolTip = binding.addNoteToolTip
+        addTaskToolTip = binding.addTaskToolTip
 
         fab.setOnClickListener {
             onAddButtonClicked()
@@ -188,9 +193,11 @@ class MainActivity : AppCompatActivity() {
         if (clicked) {
             addNoteFab.isClickable = false
             addNoteFab.startAnimation(toBottom)
+            addNoteToolTip.startAnimation(toBottom)
 
             addTaskFab.isClickable = false
             addTaskFab.startAnimation(toBottom)
+            addTaskToolTip.startAnimation(toBottom)
         }
 
         clicked = false
@@ -224,9 +231,16 @@ class MainActivity : AppCompatActivity() {
         if (!clicked) {
             addNoteFab.isClickable = false
             addTaskFab.isClickable = false
+
+            addTaskToolTip.isClickable = false
+            addNoteToolTip.isClickable = false
+
         } else {
             addNoteFab.isClickable = true
             addTaskFab.isClickable = true
+
+            addTaskToolTip.isClickable = true
+            addNoteToolTip.isClickable = true
         }
     }
 
@@ -234,9 +248,17 @@ class MainActivity : AppCompatActivity() {
         if (!clicked) {
             addNoteFab.startAnimation(toBottom)
             addTaskFab.startAnimation(toBottom)
+
+            addTaskToolTip.startAnimation(toBottom)
+            addNoteToolTip.startAnimation(toBottom)
+
         } else {
             addNoteFab.startAnimation(fromBottom)
             addTaskFab.startAnimation(fromBottom)
+
+            addTaskToolTip.startAnimation(fromBottom)
+            addNoteToolTip.startAnimation(fromBottom)
+
         }
     }
 
