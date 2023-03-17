@@ -9,16 +9,11 @@
     app:cardCornerRadius="8dp">
 
     <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <CheckBox
-            android:id="@+id/taskStatusCb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:buttonTint="@color/colorTheme"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true" />
+        android:layout_height="match_parent"
+        android:layout_marginBottom="5dp"
+        android:background="@color/white">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/taskTitleTv"
@@ -27,10 +22,11 @@
             android:maxWidth="170dp"
             android:maxLines="1"
             android:ellipsize="end"
-            android:layout_toEndOf="@id/taskStatusCb"
+            android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="8dp"
-            android:paddingVertical="4dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:paddingBottom="4dp"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:text="@string/heading_placeholder"
@@ -97,7 +93,7 @@
             android:layout_below="@+id/taskTitleTv"
             android:layout_alignStart="@id/taskTitleTv"
             android:layout_marginTop="3dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="16dp"
             android:layout_alignParentEnd="true"
             android:lineSpacingExtra="2dp"
             android:ellipsize="end"

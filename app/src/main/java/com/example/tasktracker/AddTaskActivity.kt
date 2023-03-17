@@ -22,21 +22,19 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.*
+
 
 class AddTaskActivity : AppCompatActivity() {
 
-
     private val TAG = "AddTaskActivity"
 
-    private val calendar: Calendar = Calendar.getInstance()
     private lateinit var binding: ActivityAddTaskBinding
     private var newTask: Boolean = true
 
     private lateinit var taskTitle: String
     private lateinit var taskDescription: String
-    private lateinit var taskStartDate: String
-    private lateinit var taskEndDate: String
+    private lateinit var taskStartDateString: String
+    private lateinit var taskEndDateString: String
     private lateinit var taskPriority: String
 
     private lateinit var taskTitleEt: TextInputEditText
@@ -51,6 +49,9 @@ class AddTaskActivity : AppCompatActivity() {
     private lateinit var dateFormatter: DateTimeFormatter
 
     private lateinit var utils: Utils
+    private lateinit var currentDate: LocalDate
+    private lateinit var selectedStartDate: LocalDate
+    private lateinit var selectedEndDate: LocalDate
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,13 +81,16 @@ class AddTaskActivity : AppCompatActivity() {
         utils = Utils()
         auth = FirebaseAuth.getInstance()
         authId = auth.currentUser!!.uid
-        dbReference = FirebaseDatabase.getInstance().reference.child("users")
+            dbReference = FirebaseDatabase.getInstance().reference.child("users")
             .child(authId).child("tasks")
 
 
         newTask = intent.getBooleanExtra("newTask", true)
-        taskStartDate = LocalDate.now().format(dateFormatter)
-        taskEndDate = LocalDate.now().format(dateFormatter)
+        currentDate = LocalDate.now()
+        selectedStartDate = currentDate
+        selectedEndDate = currentDate
+        taskStartDateString = selectedStartDate.format(dateFormatter)
+        taskEndDateString = selectedEndDate.format(dateFormatter)
 
 
         if (!newTask) {
@@ -102,15 +106,35 @@ class AddTaskActivity : AppCompatActivity() {
             // get task data from intent
             taskTitle = intent.getStringExtra("taskTitle") ?: ""
             taskDescription = intent.getStringExtra("taskDescription") ?: ""
-            taskStartDate = intent.getStringExtra("taskStartDate") ?: ""
-            taskEndDate = intent.getStringExtra("taskEndDate") ?: ""
+            taskStartDateString = intent.getStringExtra("taskStartDate") ?: ""
+            selectedStartDate = LocalDate.parse(taskStartDateString, dateFormatter)
+            taskEndDateString = intent.getStringExtra("taskEndDate") ?: ""
+            selectedEndDate = LocalDate.parse(taskEndDateString, dateFormatter)
             taskPriority = intent.getStringExtra("taskPriority") ?: ""
 
             // set task data in edit text
             taskTitleEt.setText(taskTitle)
             taskDescriptionEt.setText(taskDescription)
-            binding.startDateTv.text = taskStartDate
-            binding.endDateTv.text = taskEndDate
+            val taskStartDateSplitted = taskStartDateString.split("-")
+            binding.startDateTv.text = buildString {
+                append(taskStartDateSplitted[0])
+                append(" ")
+                append(utils.monthMap[taskStartDateSplitted[1].toInt()])
+                append(" ")
+                append(taskStartDateSplitted[2])
+                append(", ")
+                append(utils.dayMap[LocalDate.parse(taskStartDateString, dateFormatter).dayOfWeek.value])
+            }
+            val taskEndDateSplitted = taskEndDateString.split("-")
+            binding.endDateTv.text = buildString {
+                append(taskEndDateSplitted[0])
+                append(" ")
+                append(utils.monthMap[taskEndDateSplitted[1].toInt()])
+                append(" ")
+                append(taskEndDateSplitted[2])
+                append(", ")
+                append(utils.dayMap[LocalDate.parse(taskEndDateString, dateFormatter).dayOfWeek.value])
+            }
             when (taskPriority) {
                 "Low" -> binding.lowPriority.isChecked = true
                 "Normal" -> binding.normalPriority.isChecked = true
@@ -137,28 +161,24 @@ class AddTaskActivity : AppCompatActivity() {
             // set title in toolbar
             supportActionBar?.title = getString(R.string.create_task)
 
-
-            taskStartDate = LocalDate.now().format(dateFormatter)
-            taskEndDate = LocalDate.now().format(dateFormatter)
-
             binding.startDateTv.text = buildString {
-                append(calendar.get(Calendar.DAY_OF_MONTH).toString())
+                append(currentDate.dayOfMonth)
                 append(" ")
-                append(utils.monthMap[calendar.get(Calendar.MONTH)])
+                append(utils.monthMap[currentDate.monthValue])
                 append(" ")
-                append(calendar.get(Calendar.YEAR))
+                append(currentDate.year)
                 append(", ")
-                append(utils.dayMap[calendar.get(Calendar.DAY_OF_WEEK)])
+                append(utils.dayMap[currentDate.dayOfWeek.value])
             }
 
             binding.endDateTv.text = buildString {
-                append(calendar.get(Calendar.DAY_OF_MONTH).toString())
+                append(currentDate.dayOfMonth)
                 append(" ")
-                append(utils.monthMap[calendar.get(Calendar.MONTH)])
+                append(utils.monthMap[currentDate.monthValue])
                 append(" ")
-                append(calendar.get(Calendar.YEAR))
+                append(currentDate.year)
                 append(", ")
-                append(utils.dayMap[calendar.get(Calendar.DAY_OF_WEEK)])
+                append(utils.dayMap[currentDate.dayOfWeek.value])
             }
 
             binding.normalPriority.isChecked = true
@@ -170,61 +190,53 @@ class AddTaskActivity : AppCompatActivity() {
     private fun registerEvents() {
 
         binding.startCalenderButton.setOnClickListener {
-            // create date picker
-
-            val calendar = Calendar.getInstance()
-            val currentYear = calendar.get(Calendar.YEAR)
-            val currentMonth = calendar.get(Calendar.MONTH)
-            val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
-
+            // create date picker dialog
             hideKeyboard()
 
             DatePickerDialog(this, { _, year, month, dayOfMonth ->
                 // set date to text view
-                calendar.set(year, month, dayOfMonth)
                 binding.startDateTv.text = buildString {
                     append(dayOfMonth)
                     append(" ")
-                    append(utils.monthMap[month])
+                    append(utils.monthMap[month + 1])
                     append(" ")
                     append(year)
                     append(", ")
-                    append(utils.dayMap[calendar.get(Calendar.DAY_OF_WEEK)])
+                    append(utils.dayMap[LocalDate.of(year, month + 1, dayOfMonth).dayOfWeek.value])
                 }
-                taskStartDate = LocalDate.of(year, month + 1, dayOfMonth).format(dateFormatter)
+                selectedStartDate = LocalDate.of(year, month + 1, dayOfMonth)
+                taskStartDateString = selectedStartDate.format(dateFormatter)
+                if (selectedStartDate.isAfter(selectedEndDate)) {
+                    binding.endDateTv.setTextColor(getColor(R.color.red))
+                    binding.endDateTv.error = "End date must be greater than start date"
+                    Snackbar.make(binding.root,"End date must be greater than start date",Snackbar.LENGTH_SHORT).show()
+                } else {
+                    binding.endDateTv.setTextColor(getColor(R.color.black))
+                    binding.endDateTv.error = null
+                }
                 binding.startDateTv.setTextColor(getColor(R.color.black))
-            }, currentYear, currentMonth, currentDay).show()
+            }, selectedStartDate.year, selectedStartDate.monthValue - 1, selectedStartDate.dayOfMonth).show()
         }
         binding.endCalenderButton.setOnClickListener {
             // create date picker
-            val calendar = Calendar.getInstance()
-            val currentYear = calendar.get(Calendar.YEAR)
-            val currentMonth = calendar.get(Calendar.MONTH)
-            val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
-
             hideKeyboard()
 
             DatePickerDialog(this, { _, year, month, dayOfMonth ->
-
-                calendar.set(year, month, dayOfMonth)
-
                 // set date to text view
                 binding.endDateTv.text = buildString {
                     append(dayOfMonth)
                     append(" ")
-                    append(utils.monthMap[month])
+                    append(utils.monthMap[month + 1])
                     append(" ")
                     append(year)
                     append(", ")
-                    append(utils.dayMap[calendar.get(Calendar.DAY_OF_WEEK)])
+                    append(utils.dayMap[LocalDate.of(year, month + 1, dayOfMonth).dayOfWeek.value])
                 }
 
                 binding.startDateTv.setTextColor(getColor(R.color.black))
-                taskEndDate = LocalDate.of(year, month + 1, dayOfMonth).format(dateFormatter)
-                if (LocalDate.parse(taskStartDate, dateFormatter) > LocalDate.parse(
-                        taskEndDate,
-                        dateFormatter
-                    )
+                selectedEndDate = LocalDate.of(year, month + 1, dayOfMonth)
+                taskEndDateString = selectedEndDate.format(dateFormatter)
+                if (selectedStartDate.isAfter(selectedEndDate)
                 ) {
                     binding.endDateTv.setTextColor(getColor(R.color.red))
                     binding.endDateTv.error = "End date must be greater than start date"
@@ -234,25 +246,25 @@ class AddTaskActivity : AppCompatActivity() {
                     binding.endDateTv.error = null
                 }
 
-            }, currentYear, currentMonth, currentDay).show()
+            }, selectedEndDate.year, selectedEndDate.monthValue - 1, selectedEndDate.dayOfMonth).show()
         }
         binding.saveTaskButton.setOnClickListener {
-            taskTitle = taskTitleEt.text.toString()
-            taskDescription = taskDescriptionEt.text.toString()
+            taskTitle = taskTitleEt.text.toString().trim()
+            taskDescription = taskDescriptionEt.text.toString().trim()
             when (radioGroup.checkedRadioButtonId) {
                 R.id.lowPriority -> taskPriority = "Low"
                 R.id.normalPriority -> taskPriority = "Normal"
                 R.id.criticalPriority -> taskPriority = "Critical"
             }
 
-            Log.d(TAG, "$taskStartDate, $taskEndDate")
+            Log.d(TAG, "$taskStartDateString, $taskEndDateString")
             if (taskTitle.isNotEmpty() && taskDescription.isNotEmpty() && (LocalDate.parse(
-                    taskStartDate,
+                    taskStartDateString,
                     dateFormatter
-                ).isBefore(LocalDate.parse(taskEndDate, dateFormatter)) || LocalDate.parse(
-                    taskStartDate,
+                ).isBefore(LocalDate.parse(taskEndDateString, dateFormatter)) || LocalDate.parse(
+                    taskStartDateString,
                     dateFormatter
-                ).isEqual(LocalDate.parse(taskEndDate, dateFormatter)))
+                ).isEqual(LocalDate.parse(taskEndDateString, dateFormatter)))
             ) {
                 AlertDialog.Builder(this)
                     .setTitle("Save Task")
@@ -263,8 +275,8 @@ class AddTaskActivity : AppCompatActivity() {
                             taskData = TaskData(
                                 title = taskTitle,
                                 description = taskDescription,
-                                startDate = taskStartDate,
-                                endDate = taskEndDate,
+                                startDate = taskStartDateString,
+                                endDate = taskEndDateString,
                                 priority = taskPriority
                             )
 
@@ -275,10 +287,10 @@ class AddTaskActivity : AppCompatActivity() {
 
                                 taskData = TaskData(
                                     id = intent.getStringExtra("taskId")!!,
-                                    title = taskTitleEt.text.toString(),
-                                    description = taskDescriptionEt.text.toString(),
-                                    startDate = binding.startDateTv.text.toString(),
-                                    endDate = binding.endDateTv.text.toString(),
+                                    title = taskTitleEt.text.toString().trim(),
+                                    description = taskDescriptionEt.text.toString().trim(),
+                                    startDate = taskStartDateString,
+                                    endDate = taskEndDateString,
                                     priority = when (radioGroup.checkedRadioButtonId) {
                                         R.id.lowPriority -> "Low"
                                         R.id.normalPriority -> "Normal"
@@ -308,16 +320,16 @@ class AddTaskActivity : AppCompatActivity() {
             } else if (taskDescription.isEmpty()) {
                 taskDescriptionEt.error = "Task description is required"
                 return@setOnClickListener
-            } else if (taskStartDate.isEmpty()) {
+            } else if (taskStartDateString.isEmpty()) {
                 Snackbar.make(binding.root, "Task start date is required", Snackbar.LENGTH_SHORT)
                     .show()
                 return@setOnClickListener
-            } else if (taskEndDate.isEmpty()) {
+            } else if (taskEndDateString.isEmpty()) {
                 Snackbar.make(binding.root, "Task end date is required", Snackbar.LENGTH_SHORT)
                     .show()
                 return@setOnClickListener
-            } else if (LocalDate.parse(taskStartDate, dateFormatter) > LocalDate.parse(
-                    taskEndDate,
+            } else if (LocalDate.parse(taskStartDateString, dateFormatter) > LocalDate.parse(
+                    taskEndDateString,
                     dateFormatter
                 )
             ) {
@@ -442,7 +454,7 @@ class AddTaskActivity : AppCompatActivity() {
     private fun handleBackPressed() {
         if (!newTask) {
 
-            if (taskTitleEt.text.toString() != taskTitle || taskDescriptionEt.text.toString() != taskDescription || binding.startDateTv.text.toString() != taskStartDate || binding.endDateTv.text.toString() != taskEndDate || when (radioGroup.checkedRadioButtonId) {
+            if (taskTitleEt.text.toString() != taskTitle || taskDescriptionEt.text.toString() != taskDescription || binding.startDateTv.text.toString() != taskStartDateString || binding.endDateTv.text.toString() != taskEndDateString || when (radioGroup.checkedRadioButtonId) {
                     R.id.lowPriority -> "Low"
                     R.id.normalPriority -> "Normal"
                     R.id.criticalPriority -> "Critical"

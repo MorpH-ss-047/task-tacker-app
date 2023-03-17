@@ -123,16 +123,16 @@
 
     <ImageView
         android:id="@+id/showCalendarButton"
-        android:layout_width="30dp"
+        android:layout_width="36dp"
         android:layout_height="36dp"
         android:layout_marginTop="5dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="24dp"
         android:background="@android:color/transparent"
         android:src="@drawable/calender_vector"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/taskStatusButtonGroup"
         app:tint="@color/white"
-        android:contentDescription="@string/show_calendar_button" />
+        android:contentDescription="@string/show_calendar" />
 
     <CalendarView
         android:id="@id/calendarView"
@@ -144,6 +144,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
     <include
         android:id="@+id/taskStatusButtonGroup"
@@ -158,18 +159,15 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/taskListHomeScreenRv"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="6dp"
         android:layout_marginBottom="50dp"
         android:padding="10dp"
         android:scrollbarFadeDuration="@integer/material_motion_duration_short_2"
         android:scrollbarStyle="outsideOverlay"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/taskStatusButtonGroup"
-        app:layout_constraintVertical_bias="0.0"
         tools:listitem="@layout/calendar_task_list_item" />
 
     <ProgressBar

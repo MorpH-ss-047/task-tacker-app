@@ -34,7 +34,6 @@ class AddNoteActivity : AppCompatActivity() {
     private lateinit var dbReference: DatabaseReference
 
     private var edit: Boolean = false
-    private var position: Int = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,9 +43,9 @@ class AddNoteActivity : AppCompatActivity() {
         setContentView(view)
 
 
-        binding.deleteButton.visibility = View.GONE
-        binding.deleteButton.isEnabled = false
-        binding.deleteButton.isClickable = false
+//        binding.deleteButton.visibility = View.GONE
+//        binding.deleteButton.isEnabled = false
+//        binding.deleteButton.isClickable = false
 
         init()
         registerEvents()
@@ -72,7 +71,6 @@ class AddNoteActivity : AppCompatActivity() {
             noteId = intent.getStringExtra("noteId")
             noteTitle = intent.getStringExtra("noteTitle")
             noteDescription = intent.getStringExtra("noteDescription")
-            position = intent.getIntExtra("position", 0)
 
             // set note data in edit text
             noteTitleEt.setText(noteTitle)
@@ -130,7 +128,6 @@ class AddNoteActivity : AppCompatActivity() {
             description = noteDescriptionEt.text.toString()
         )
         deleteNoteFromFirebase(noteData)
-        Log.d("AddNoteActivity", "adapter position: $position")
     }
 
 
@@ -153,7 +150,6 @@ class AddNoteActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
             }
-
 
 
         } else { /* new note == true */
@@ -199,42 +195,40 @@ class AddNoteActivity : AppCompatActivity() {
         // update note in firebase
         dbReference.child(noteData.id).updateChildren(noteData.toMap()).addOnCompleteListener {
             if (it.isSuccessful) {
-                Log.d("AddNoteActivity", "Note updated")
+                Log.d("AddNoteActivity", "Note updated, note id = ${noteData.id}")
                 Toast.makeText(this, "Note updated", Toast.LENGTH_SHORT).show()
             } else {
-                Log.d("AddNoteActivity", "Error while updating note", it.exception)
+                Log.d("AddNoteActivity", "Error while updating note [note id ${noteData.id}]", it.exception)
                 Toast.makeText(
                     this, "Error while updating note...", Toast.LENGTH_SHORT
                 ).show()
             }
         }
             .addOnFailureListener {
-                Log.d("AddNoteActivity", "Error while updating note", it)
+                Log.d("AddNoteActivity", "Error while updating note [note id ${noteData.id}]", it)
                 Toast.makeText(
                     this, "Error while updating note...", Toast.LENGTH_SHORT
                 ).show()
             }
     }
 
+
+
     private fun deleteNoteFromFirebase(noteData: NoteData) {
-        // delete note from firebase
-        Log.d("AddNoteActivity", "deleteNoteFromFirebase: ${noteData.id} $position")
+        Log.d("AddNoteActivity", "deleting note from firebase: ${noteData.id}")
         dbReference.child(noteData.id).removeValue().addOnCompleteListener {
             if (it.isSuccessful) {
-                Log.d("AddNoteActivity", "Note deleted, $position")
-                // delete note from recycler view and notify adapter
-//                NoteFragment().noteAdapter.notifyItemRemoved()
-                Log.d("AddNoteActivity", "Note deleted")
+                Log.d("AddNoteActivity", "Note deleted [note id ${noteData.id}]")
                 Toast.makeText(this, "Note deleted", Toast.LENGTH_SHORT).show()
             } else {
-                Log.d("AddNoteActivity", "Error while deleting note", it.exception)
+                Log.d("AddNoteActivity", "Error while deleting note [note id ${noteData.id}]", it.exception)
                 Toast.makeText(
                     this, "Error while deleting note...", Toast.LENGTH_SHORT
                 ).show()
             }
         }
             .addOnFailureListener {
-                Log.d("AddNoteActivity", "Error while deleting note", it)
+                Log.d("AddNoteActivity", "Error while deleting note [note id ${noteData.id}]", it)
                 Toast.makeText(
                     this, "Error while deleting note...", Toast.LENGTH_SHORT
                 ).show()

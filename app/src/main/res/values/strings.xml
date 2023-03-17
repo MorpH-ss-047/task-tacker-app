@@ -20,6 +20,7 @@
     <string name="confirm_your_password">Confirm your password</string>
     <string name="didn_t_recieve_the_otp">Didn\'t receive the OTP?</string>
     <string name="resend_otp">Resend OTP</string>
+    <string name="resend_otp_in">Resend OTP in %1$d seconds</string>
     <string name="complete_registration">Complete Registration</string>
     <string name="avatar">Avatar</string>
     <string name="male">Male</string>
@@ -187,6 +188,23 @@
     <string name="export_your_info">Export your info</string>
     <string name="privacy">Privacy</string>
     <string name="title_activity_settings">SettingsActivity</string>
+    <string name="settings">Settings</string>
+    <string name="deadline">Deadline:</string>
+    <string name="dummy_date">Feb 17</string>
+    <string name="logout">Logout</string>
+    <string name="no_tasks">Nothing to show here…</string>
+    <string name="all">All</string>
+    <string name="today">Today</string>
+    <string name="_19">19</string>
+    <string name="_20">20</string>
+    <string name="_22">22</string>
+    <string name="_23">23</string>
+    <string name="_24">24</string>
+    <string name="_17">17</string>
+    <string name="show_calendar">Show Calendar</string>
+    <string name="no_tasks_for_date">No tasks for %1$s</string>
+    <string name="no_completed_tasks_for_date">No completed tasks for %1$s</string>
+    <string name="no_pending_tasks_for_date">No pending tasks for %1$s</string>
 
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
@@ -202,19 +220,10 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
-    <string name="settings">Settings</string>
-    <string name="deadline">Deadline:</string>
-    <string name="dummy_date">Feb 17</string>
-    <string name="logout">Logout</string>
-    <string name="no_tasks">Nothing to show here…</string>
-    <string name="all">All</string>
-    <string name="today">Today</string>
-    <string name="_19">19</string>
-    <string name="_20">20</string>
-    <string name="_22">22</string>
-    <string name="_23">23</string>
-    <string name="_24">24</string>
-    <string name="_17">17</string>
-    <string name="show_calendar_button">Show Calendar Button</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="send_email">Send Email</string>
+    <string name="reset_password_email_instruction">Enter your email address to send you a link to reset your password</string>
+    <string name="use_email">Use email</string>
+
 
 </resources>

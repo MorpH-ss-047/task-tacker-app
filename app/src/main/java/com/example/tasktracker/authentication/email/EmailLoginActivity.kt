@@ -1,10 +1,10 @@
 package com.example.tasktracker.authentication.email
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.tasktracker.MainActivity
 import com.example.tasktracker.R
 import com.example.tasktracker.databinding.ActivityEmailLoginBinding
@@ -32,6 +32,13 @@ class EmailLoginActivity : AppCompatActivity() {
     }
 
     private fun registerEvents() {
+
+        binding.forgotPasswordTv.setOnClickListener {
+            val intent = Intent(this, ForgotPasswordActivity::class.java)
+            startActivity(intent)
+        }
+
+
         binding.signInButton.setOnClickListener {
             val email: String = binding.emailEt.text.toString().trim()
             val password: String = binding.passwordEt.text.toString().trim()

@@ -45,7 +45,6 @@
         android:id="@+id/authTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/placeholder_email"
         android:textColor="@color/white"
         android:textSize="16sp"
         android:visibility="invisible"

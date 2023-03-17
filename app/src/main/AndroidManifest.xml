@@ -12,6 +12,9 @@
         android:theme="@style/Theme.TaskTrackerLight"
         tools:targetApi="31">
         <activity
+            android:name=".authentication.email.ForgotPasswordActivity"
+            android:exported="false" />
+        <activity
             android:name=".SettingsActivity"
             android:exported="false" />
         <activity
@@ -27,29 +30,29 @@
             android:exported="false" />
         <activity
             android:name=".authentication.email.EmailLoginActivity"
-            android:theme="@style/Theme.TaskTrackerWhiteStatusBar"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.TaskTrackerWhiteStatusBar" />
         <activity
             android:name=".authentication.email.EmailSignupActivity"
-            android:theme="@style/Theme.TaskTrackerWhiteStatusBar"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.TaskTrackerWhiteStatusBar" />
         <activity
             android:name=".authentication.phone.OTPActivity"
-            android:theme="@style/Theme.TaskTrackerWhiteStatusBar"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.TaskTrackerWhiteStatusBar" />
         <activity
             android:name=".authentication.phone.PhoneLoginActivity"
-            android:theme="@style/Theme.TaskTrackerWhiteStatusBar"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.TaskTrackerWhiteStatusBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

@@ -1,12 +1,12 @@
 package com.example.tasktracker.authentication.phone
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.tasktracker.MainActivity
 import com.example.tasktracker.authentication.email.EmailLoginActivity
 import com.example.tasktracker.databinding.ActivityPhoneLoginBinding
@@ -164,9 +164,9 @@ class PhoneLoginActivity : AppCompatActivity() {
         val currentUser = auth.currentUser
         if (currentUser != null) {
             val intent = Intent(this, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
             finish()
         }
     }
-
 }

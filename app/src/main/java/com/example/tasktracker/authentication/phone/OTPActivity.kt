@@ -1,14 +1,13 @@
 package com.example.tasktracker.authentication.phone
 
+import android.content.Context
 import android.content.Intent
-import android.os.Build
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.os.*
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -34,6 +33,7 @@ class OTPActivity : AppCompatActivity() {
     private lateinit var verifyOTPButton: MaterialButton
     private lateinit var didntReceiveOTPTv: TextView
     private lateinit var resendOTPTv: TextView
+    private lateinit var resendOTPTimerTv: TextView
     private lateinit var wrongOTPTv: TextView
     private lateinit var otpEt1: TextInputEditText
     private lateinit var otpEt2: TextInputEditText
@@ -56,7 +56,7 @@ class OTPActivity : AppCompatActivity() {
 
 
         otp = intent.getStringExtra("OTP").toString()
-        if (Build.VERSION.SDK_INT >= 33) { // API 33 = Android 12 = S = Tiramisu
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // API 33 = T = Tiramisu
             resendingToken = intent.getParcelableExtra("resendToken", PhoneAuthProvider.ForceResendingToken::class.java)!!
         }else{
             @Suppress("DEPRECATION")
@@ -89,6 +89,7 @@ class OTPActivity : AppCompatActivity() {
         verifyOTPButton = binding.verifyOTPButton
         didntReceiveOTPTv = binding.didntRecieveOtpTv
         resendOTPTv = binding.resendOTPTv
+        resendOTPTimerTv = binding.resendOTPTimerTv
         wrongOTPTv = binding.wrongOTPTv
 
         otpEt1 = binding.otpEt1
@@ -97,6 +98,27 @@ class OTPActivity : AppCompatActivity() {
         otpEt4 = binding.otpEt4
         otpEt5 = binding.otpEt5
         otpEt6 = binding.otpEt6
+
+        otpEt1.requestFocus()
+        showKeyboard()
+
+        // countDownTimer in timerTv
+        object : CountDownTimer(60000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                resendOTPTimerTv.text = getString(R.string.resend_otp_in, millisUntilFinished / 1000)
+            }
+
+            override fun onFinish() {
+                resendOTPTimerTv.visibility = View.GONE
+            }
+        }.start()
+
+
+    }
+
+    private fun showKeyboard(){
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(otpEt1, InputMethodManager.SHOW_IMPLICIT)
     }
 
     private fun resendOTPTvVisibility() {
@@ -113,7 +135,9 @@ class OTPActivity : AppCompatActivity() {
         Handler(Looper.myLooper()!!).postDelayed({
             didntReceiveOTPTv.visibility = View.VISIBLE
             resendOTPTv.visibility = View.VISIBLE
+
             resendOTPTv.isEnabled = true
+            resendOTPTv.isClickable = true
         }, 60000)
     }
 
@@ -218,9 +242,6 @@ class OTPActivity : AppCompatActivity() {
         otpEt6.addTextChangedListener(EditTextWatcher(otpEt6))
     }
 
-    /**
-     * This class helps to jump the cursor to the next EditText when the user enters a digit in the current EditText
-     */
     inner class EditTextWatcher(private val view: View) : TextWatcher {
 
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -229,38 +250,61 @@ class OTPActivity : AppCompatActivity() {
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
-
-
-        }
-
-        override fun afterTextChanged(s: Editable?) {
             // Get the text from the current EditText
             val text = s.toString()
             // Move the cursor to the next EditText
             when (view.id) {
                 R.id.otpEt1 -> {
-                    if (text.isNotEmpty()) otpEt2.requestFocus()
+                    if (text.trim().isNotEmpty()) {
+                        Log.d(TAG, "onTextChanged OTP1 going to 1 -> 2 $text")
+                        otpEt2.requestFocus()
+                    }
                 }
+
                 R.id.otpEt2 -> {
-                    if (text.isEmpty()) otpEt1.requestFocus() else otpEt3.requestFocus()
+                    if (text.trim().isNotEmpty()) {
+                        Log.d(TAG, "onTextChanged OTP2 going to otp 2 -> 3: $text")
+                        otpEt3.requestFocus()
+                    }
                 }
+
                 R.id.otpEt3 -> {
-                    if (text.isEmpty()) otpEt2.requestFocus() else otpEt4.requestFocus()
+                    if (text.trim().isNotEmpty()) {
+                        Log.d(TAG, "onTextChanged OTP3 going to otp 3 -> 4: $text")
+                        otpEt4.requestFocus()
+                    }
                 }
+
                 R.id.otpEt4 -> {
-                    if (text.isEmpty()) otpEt3.requestFocus() else otpEt5.requestFocus()
+                    if (text.trim().isNotEmpty()) {
+                        Log.d(TAG, "onTextChanged OTP4 going to otp 4 -> 5: $text")
+                        otpEt5.requestFocus()
+                    }
                 }
+
                 R.id.otpEt5 -> {
-                    if (text.isEmpty()) otpEt4.requestFocus() else otpEt6.requestFocus()
+
+                    if (text.trim().isNotEmpty()) {
+                        Log.d(TAG, "onTextChanged OTP5 going to otp 5 -> 6: $text")
+                        otpEt6.requestFocus()
+                    }
                 }
+
                 R.id.otpEt6 -> {
-                    if (text.isEmpty()) otpEt5.requestFocus()
+
                 }
+
                 else -> {
                     otpEt1.requestFocus()
                 }
 
             }
+
+
+        }
+
+        override fun afterTextChanged(s: Editable?) {
+
         }
 
     }

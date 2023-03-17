@@ -63,7 +63,6 @@ class NoteFragment : Fragment(), NoteAdapter.OnNoteClickListenerInterface {
         noteAdapter = NoteAdapter(noteList)
         noteAdapter.setListener(this)
         noteListRv.adapter = noteAdapter
-        noteListRv.setHasFixedSize(true)
     }
 
     private fun getNotesFromFirebase() {
@@ -76,11 +75,9 @@ class NoteFragment : Fragment(), NoteAdapter.OnNoteClickListenerInterface {
                 for (taskSnapshot in snapshot.children) {
                     val note =
                         taskSnapshot.key?.let {
-
                             val id = it
                             val title = taskSnapshot.child("title").value ?: ""
                             val description = taskSnapshot.child("description").value.toString()
-
                             NoteData(id, title.toString(), description)
 
                         }

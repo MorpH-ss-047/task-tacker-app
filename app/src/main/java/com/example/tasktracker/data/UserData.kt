@@ -10,11 +10,11 @@ data class UserData(
     var gender: String = "",
     var phone: String = "",
     var email: String = "",
-    var method: String = "phone"
+    var method: String? = "phone"
 ) {
     // get map of user data
     @Exclude
-    fun toMap(): Map<String, String> {
+    fun toMap(): Map<String, String?> {
         return mapOf(
             "fullName" to fullName,
             "age" to age,

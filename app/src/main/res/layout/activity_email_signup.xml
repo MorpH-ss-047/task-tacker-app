@@ -12,7 +12,8 @@
         android:layout_width="355dp"
         android:layout_height="360dp"
         android:contentDescription="@string/logo"
-        android:src="@drawable/to_do_logo"
+        android:layout_marginTop="48dp"
+        android:src="@drawable/app_logo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

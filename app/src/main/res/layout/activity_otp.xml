@@ -11,7 +11,8 @@
         android:layout_width="355dp"
         android:layout_height="360dp"
         android:contentDescription="@string/logo"
-        android:src="@drawable/to_do_logo"
+        android:layout_marginTop="48dp"
+        android:src="@drawable/app_logo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -276,11 +277,23 @@
         app:layout_constraintTop_toBottomOf="@id/verifyOTPButton"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="35dp"
+        android:visibility="invisible"
         android:text="@string/didn_t_recieve_the_otp"
         android:textSize="14sp"
         android:textColor="@color/black"
         android:textStyle="bold"/>
 
+    <TextView
+        android:id="@+id/resendOTPTimerTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/resend_otp_in"
+        android:textSize="16sp"
+        android:layout_marginTop="16dp"
+        android:textColor="#C80303"
+        app:layout_constraintLeft_toLeftOf="@id/verifyOTPButton"
+        app:layout_constraintRight_toRightOf="@id/verifyOTPButton"
+        app:layout_constraintTop_toBottomOf="@id/verifyOTPButton" />
 
     <TextView
         android:id="@+id/resendOTPTv"
@@ -289,6 +302,7 @@
         android:text="@string/resend_otp"
         android:textSize="16sp"
         android:layout_marginTop="5dp"
+        android:visibility="invisible"
         android:textColor="#C80303"
         app:layout_constraintLeft_toLeftOf="@id/didntRecieveOtpTv"
         app:layout_constraintRight_toRightOf="@id/didntRecieveOtpTv"

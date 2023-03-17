@@ -64,10 +64,17 @@ class HomeFragmentTaskAdapter(private val taskList: ArrayList<TaskData>) :
                     }
                 }
             )
-            taskStatusCb.isChecked = taskList[position].completed
-            val date = taskList[position].endDate?.split("-")
 
-            taskStatusCb.isClickable = false
+            relativeLayout.background = AppCompatResources.getDrawable(
+                relativeLayout.context,
+                if(taskList[position].completed) {
+                    R.drawable.task_background_completed
+                } else {
+                    R.drawable.task_background_not_completed
+                }
+            )
+
+            val date = taskList[position].endDate?.split("-")
 
 //            Log.d(TAG, "$position  ${taskList[position].endDate?: "null"}: ${date?: "null"}")
             taskEndDateTv.text = buildString {

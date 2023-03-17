@@ -58,6 +58,11 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
+        val homeFragment = HomeFragment()
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.fragmentContainer, homeFragment)
+        transaction.commit()
+
         auth = FirebaseAuth.getInstance()
         val user = auth.currentUser
         val profileAtTopBinding = ProfileAtTopBinding.bind(binding.root)
@@ -121,10 +126,7 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        val homeFragment = HomeFragment()
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.fragmentContainer, homeFragment)
-        transaction.commit()
+
 
 
 
@@ -222,7 +224,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun onAddButtonClicked() {
         clicked = !clicked
-        setFabVisibility(clicked)
+        setFabVisibility()
         setFabAnimation(clicked)
         setFabClickable(clicked)
     }
@@ -262,7 +264,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setFabVisibility(clicked: Boolean) {
+    private fun setFabVisibility(/* clicked: Boolean */) {
 //        if (!clicked) {
 //            addNoteFab.hide()
 //            addTaskFab.hide()

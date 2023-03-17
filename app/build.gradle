@@ -58,5 +58,11 @@ dependencies {
     // swipe gesture recycler view
     implementation 'it.xabaras.android:recyclerview-swipedecorator:1.4'
 
+    // material CalendarView
+//    implementation "com.github.prolificinteractive:material-calendarview:2.0.0"
+
+
+
+
 
 }

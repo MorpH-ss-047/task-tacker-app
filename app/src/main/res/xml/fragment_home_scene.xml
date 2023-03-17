@@ -14,6 +14,9 @@
                android:scaleY="0" />
        </KeyFrameSet>
         <OnClick motion:targetId="@+id/showCalendarButton" />
+        <OnSwipe
+            motion:touchAnchorId="@+id/taskStatusButtonGroup"
+            motion:touchAnchorSide="bottom" />
     </Transition>
 
     <ConstraintSet android:id="@+id/start">
@@ -51,6 +54,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintBottom_toTopOf="@id/taskStatusButtonGroup"
             motion:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="16dp" />

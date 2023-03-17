@@ -3,27 +3,27 @@ package com.example.tasktracker
 class Utils {
 
     val dayMap = mapOf(
-        1 to "Sunday",
-        2 to "Monday",
-        3 to "Tuesday",
-        4 to "Wednesday",
-        5 to "Thursday",
-        6 to "Friday",
-        7 to "Saturday"
+        1 to "Monday",
+        2 to "Tuesday",
+        3 to "Wednesday",
+        4 to "Thursday",
+        5 to "Friday",
+        6 to "Saturday",
+        7 to "Sunday",
     )
 
     val monthMap = mapOf(
-        0 to "January",
-        1 to "February",
-        2 to "March",
-        3 to "April",
-        4 to "May",
-        5 to "June",
-        6 to "July",
-        7 to "August",
-        8 to "September",
-        9 to "October",
-        10 to "November",
-        11 to "December"
+        1 to "January",
+        2 to "February",
+        3 to "March",
+        4 to "April",
+        5 to "May",
+        6 to "June",
+        7 to "July",
+        8 to "August",
+        9 to "September",
+        10 to "October",
+        11 to "November",
+        12 to "December"
     )
 }

@@ -68,8 +68,6 @@ class CalendarFragmentTaskAdapter(private val taskList: ArrayList<TaskData>) :
                 }
             )
 
-            taskStatusCb.isChecked = taskList[position].completed
-            taskStatusCb.isClickable = false
 
             val date = taskList[position].endDate?.split(" ")
             // Log.d(TAG, "onBindViewHolder CalendarAdapter: ${date?.get(1)?.slice(0..2)}")

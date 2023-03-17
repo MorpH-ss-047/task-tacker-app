@@ -67,8 +67,8 @@
                     android:hint="@string/mobile_number"
                     android:maxLength="10"
                     android:background="@color/white"
-                    android:inputType="number"
-                    android:padding="10dp"
+                    android:inputType="phone"
+                    android:padding="15dp"
                     android:textSize="16sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -105,7 +105,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_end="423dp" />
+        app:layout_constraintGuide_percent="0.47" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -113,9 +113,8 @@
         android:layout_height="360dp"
         android:layout_marginTop="48dp"
         android:contentDescription="@string/logo"
-        android:src="@drawable/to_do_logo"
+        android:src="@drawable/app_logo"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.41"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -123,7 +122,7 @@
         android:id="@+id/useEmailTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Use email"
+        android:text="@string/use_email"
         android:textSize="16sp"
         android:textStyle="normal"
         android:textColor="#3C2A7E"

@@ -67,10 +67,10 @@
         android:id="@+id/noteTitleCard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
+        android:layout_marginHorizontal="24dp"
         android:layout_marginTop="20dp"
         app:cardElevation="8dp"
-        app:cardUseCompatPadding="true"
+        app:cardUseCompatPadding="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/mToolBar">
@@ -100,11 +100,11 @@
         android:id="@+id/noteDescriptionCard"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginHorizontal="16dp"
+        android:layout_marginHorizontal="24dp"
         android:layout_marginTop="20dp"
         app:cardCornerRadius="8dp"
         app:cardElevation="8dp"
-        app:cardUseCompatPadding="true"
+        app:cardUseCompatPadding="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -125,7 +125,7 @@
                 android:gravity="start|top"
                 android:hint="@string/start_typing"
                 android:inputType="textMultiLine"
-                android:textSize="13sp" />
+                android:textSize="14sp" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
