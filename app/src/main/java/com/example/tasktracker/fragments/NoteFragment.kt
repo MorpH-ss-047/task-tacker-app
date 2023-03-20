@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.tasktracker.AddNoteActivity
 import com.example.tasktracker.adapters.NoteAdapter
+import com.example.tasktracker.crypto.CryptoManager
 import com.example.tasktracker.data.NoteData
 import com.example.tasktracker.databinding.FragmentNoteBinding
 import com.google.android.material.snackbar.Snackbar
@@ -21,6 +22,8 @@ import com.google.firebase.database.*
 class NoteFragment : Fragment(), NoteAdapter.OnNoteClickListenerInterface {
 
     private val TAG = "NoteFragment"
+
+    private lateinit var cryptoManager: CryptoManager
 
     private lateinit var binding: FragmentNoteBinding
     lateinit var noteAdapter: NoteAdapter
@@ -51,6 +54,7 @@ class NoteFragment : Fragment(), NoteAdapter.OnNoteClickListenerInterface {
 
     private fun init() {
 
+        cryptoManager = CryptoManager()
         auth = FirebaseAuth.getInstance()
         authId = auth.currentUser!!.uid
         dbReference = FirebaseDatabase.getInstance().reference.child("users")
@@ -76,9 +80,18 @@ class NoteFragment : Fragment(), NoteAdapter.OnNoteClickListenerInterface {
                     val note =
                         taskSnapshot.key?.let {
                             val id = it
-                            val title = taskSnapshot.child("title").value ?: ""
+                            val title = taskSnapshot.child("title").value.toString()
                             val description = taskSnapshot.child("description").value.toString()
-                            NoteData(id, title.toString(), description)
+
+                            val titleDecrypted = cryptoManager.decryptData(title)
+                            val descriptionDecrypted = cryptoManager.decryptData(description)
+
+
+                            NoteData(
+                                id = id,
+                                title = titleDecrypted?:"",
+                                description = descriptionDecrypted?: ""
+                            )
 
                         }
 

@@ -19,16 +19,30 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/AvatarImageView"
-        android:layout_width="104dp"
-        android:layout_height="88dp"
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/avatarIv"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
+        android:scaleType="centerCrop"
         android:layout_marginTop="40dp"
         android:contentDescription="@string/avatar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
         app:srcCompat="@drawable/avatar" />
+
+    <ImageView
+        android:id="@+id/uploadIv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dp"
+        android:contentDescription="@string/avatar"
+        app:layout_constraintBottom_toBottomOf="@+id/avatarIv"
+        app:layout_constraintEnd_toEndOf="@+id/avatarIv"
+        app:srcCompat="@drawable/outline_file_upload_24" />
+
+
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/fullNameCard"
@@ -41,7 +55,7 @@
         app:cardUseCompatPadding="true"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/AvatarImageView">
+        app:layout_constraintTop_toBottomOf="@id/avatarIv">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/fullNameTil"

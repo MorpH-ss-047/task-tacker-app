@@ -15,6 +15,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.tasktracker.data.TaskData
 import com.example.tasktracker.databinding.ActivityAddTaskBinding
+import com.example.tasktracker.utils.CalendarUtils
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
@@ -48,7 +49,7 @@ class AddTaskActivity : AppCompatActivity() {
     private lateinit var taskData: TaskData
     private lateinit var dateFormatter: DateTimeFormatter
 
-    private lateinit var utils: Utils
+    private lateinit var calendarUtils: CalendarUtils
     private lateinit var currentDate: LocalDate
     private lateinit var selectedStartDate: LocalDate
     private lateinit var selectedEndDate: LocalDate
@@ -78,7 +79,7 @@ class AddTaskActivity : AppCompatActivity() {
         radioGroup = binding.radioGroup
         dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
 
-        utils = Utils()
+        calendarUtils = CalendarUtils()
         auth = FirebaseAuth.getInstance()
         authId = auth.currentUser!!.uid
             dbReference = FirebaseDatabase.getInstance().reference.child("users")
@@ -119,21 +120,21 @@ class AddTaskActivity : AppCompatActivity() {
             binding.startDateTv.text = buildString {
                 append(taskStartDateSplitted[0])
                 append(" ")
-                append(utils.monthMap[taskStartDateSplitted[1].toInt()])
+                append(calendarUtils.monthMap[taskStartDateSplitted[1].toInt()])
                 append(" ")
                 append(taskStartDateSplitted[2])
                 append(", ")
-                append(utils.dayMap[LocalDate.parse(taskStartDateString, dateFormatter).dayOfWeek.value])
+                append(calendarUtils.dayMap[LocalDate.parse(taskStartDateString, dateFormatter).dayOfWeek.value])
             }
             val taskEndDateSplitted = taskEndDateString.split("-")
             binding.endDateTv.text = buildString {
                 append(taskEndDateSplitted[0])
                 append(" ")
-                append(utils.monthMap[taskEndDateSplitted[1].toInt()])
+                append(calendarUtils.monthMap[taskEndDateSplitted[1].toInt()])
                 append(" ")
                 append(taskEndDateSplitted[2])
                 append(", ")
-                append(utils.dayMap[LocalDate.parse(taskEndDateString, dateFormatter).dayOfWeek.value])
+                append(calendarUtils.dayMap[LocalDate.parse(taskEndDateString, dateFormatter).dayOfWeek.value])
             }
             when (taskPriority) {
                 "Low" -> binding.lowPriority.isChecked = true
@@ -164,21 +165,21 @@ class AddTaskActivity : AppCompatActivity() {
             binding.startDateTv.text = buildString {
                 append(currentDate.dayOfMonth)
                 append(" ")
-                append(utils.monthMap[currentDate.monthValue])
+                append(calendarUtils.monthMap[currentDate.monthValue])
                 append(" ")
                 append(currentDate.year)
                 append(", ")
-                append(utils.dayMap[currentDate.dayOfWeek.value])
+                append(calendarUtils.dayMap[currentDate.dayOfWeek.value])
             }
 
             binding.endDateTv.text = buildString {
                 append(currentDate.dayOfMonth)
                 append(" ")
-                append(utils.monthMap[currentDate.monthValue])
+                append(calendarUtils.monthMap[currentDate.monthValue])
                 append(" ")
                 append(currentDate.year)
                 append(", ")
-                append(utils.dayMap[currentDate.dayOfWeek.value])
+                append(calendarUtils.dayMap[currentDate.dayOfWeek.value])
             }
 
             binding.normalPriority.isChecked = true
@@ -198,11 +199,11 @@ class AddTaskActivity : AppCompatActivity() {
                 binding.startDateTv.text = buildString {
                     append(dayOfMonth)
                     append(" ")
-                    append(utils.monthMap[month + 1])
+                    append(calendarUtils.monthMap[month + 1])
                     append(" ")
                     append(year)
                     append(", ")
-                    append(utils.dayMap[LocalDate.of(year, month + 1, dayOfMonth).dayOfWeek.value])
+                    append(calendarUtils.dayMap[LocalDate.of(year, month + 1, dayOfMonth).dayOfWeek.value])
                 }
                 selectedStartDate = LocalDate.of(year, month + 1, dayOfMonth)
                 taskStartDateString = selectedStartDate.format(dateFormatter)
@@ -226,11 +227,11 @@ class AddTaskActivity : AppCompatActivity() {
                 binding.endDateTv.text = buildString {
                     append(dayOfMonth)
                     append(" ")
-                    append(utils.monthMap[month + 1])
+                    append(calendarUtils.monthMap[month + 1])
                     append(" ")
                     append(year)
                     append(", ")
-                    append(utils.dayMap[LocalDate.of(year, month + 1, dayOfMonth).dayOfWeek.value])
+                    append(calendarUtils.dayMap[LocalDate.of(year, month + 1, dayOfMonth).dayOfWeek.value])
                 }
 
                 binding.startDateTv.setTextColor(getColor(R.color.black))

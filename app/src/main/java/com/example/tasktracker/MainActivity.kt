@@ -1,6 +1,7 @@
 package com.example.tasktracker
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -21,17 +22,25 @@ import com.google.android.material.textview.MaterialTextView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
+import com.squareup.picasso.Picasso
+import com.squareup.picasso.RequestCreator
 
 class MainActivity : AppCompatActivity() {
 
     private val TAG = "MainActivity"
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var profileAtTopBinding: ProfileAtTopBinding
     private lateinit var fab: FloatingActionButton
     private lateinit var addNoteFab: FloatingActionButton
     private lateinit var addTaskFab: FloatingActionButton
     private lateinit var addTaskToolTip: MaterialTextView
     private lateinit var addNoteToolTip: MaterialTextView
+    private lateinit var displayNameTvText: String
+    private lateinit var authTvText: String
+    private var profilePicUrl: Uri? = null
+    private lateinit var profilePic: RequestCreator
+
 
     private val rotateOpen: Animation by lazy {
         AnimationUtils.loadAnimation(this, R.anim.rotate_open_animation)
@@ -58,6 +67,13 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
+        profileAtTopBinding = ProfileAtTopBinding.bind(binding.root)
+        fab = binding.fab
+        addNoteFab = binding.addNoteFab
+        addTaskFab = binding.addTaskFab
+        addNoteToolTip = binding.addNoteToolTip
+        addTaskToolTip = binding.addTaskToolTip
+
         val homeFragment = HomeFragment()
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.fragmentContainer, homeFragment)
@@ -65,22 +81,13 @@ class MainActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
         val user = auth.currentUser
-        val profileAtTopBinding = ProfileAtTopBinding.bind(binding.root)
 
 
         if (user != null) /* Set details in profileAtTopBinding if user != null */ {
             dbReference = FirebaseDatabase.getInstance().reference.child("users").child(user.uid)
                 .child("userDetails")
-
-            // setting text in profileAtTop
             getUserDetailsFromFirebase(dbReference, user, profileAtTopBinding)
-//            profileAtTopBinding.authTv.visibility = View.VISIBLE
 
-//            profileAtTopBinding.emailTv.text = user.email
-
-            if (user.photoUrl != null) {
-                profileAtTopBinding.avatar.setImageURI(user.photoUrl)
-            }
         } else /* user == null, redirect to PhoneLogInActivity */ {
             Toast.makeText(this, getString(R.string.auth_error_message), Toast.LENGTH_SHORT).show()
             val intent = Intent(this, PhoneLoginActivity::class.java)
@@ -88,7 +95,7 @@ class MainActivity : AppCompatActivity() {
             finish()
         }
 
-        profileAtTopBinding.avatar.setOnClickListener /* go to settings page */ {
+        profileAtTopBinding.avatarIv.setOnClickListener /* go to settings page */ {
             val intent = Intent(this, SettingsActivity::class.java)
             intent.putExtra("auth", profileAtTopBinding.authTv.text.toString())
             startActivity(intent)
@@ -126,12 +133,7 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-
-
-
-
         binding.bottomNavigationView.setOnItemSelectedListener {
-
             when (it.itemId) {
                 R.id.navigation_home -> {
                     val fragment = HomeFragment()
@@ -152,12 +154,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        fab = binding.fab
-        addNoteFab = binding.addNoteFab
-        addTaskFab = binding.addTaskFab
-        addNoteToolTip = binding.addNoteToolTip
-        addTaskToolTip = binding.addTaskToolTip
-
         fab.setOnClickListener {
             onAddButtonClicked()
         }
@@ -177,14 +173,8 @@ class MainActivity : AppCompatActivity() {
         val user = auth.currentUser
 
         if (user != null) {
-            val profileAtTopBinding = ProfileAtTopBinding.bind(binding.root)
-            profileAtTopBinding.name.text = user.displayName!!.split(" ")[0]
             getUserDetailsFromFirebase(dbReference, user, profileAtTopBinding)
             profileAtTopBinding.authTv.visibility = View.VISIBLE
-
-            if (user.photoUrl != null) {
-                profileAtTopBinding.avatar.setImageURI(user.photoUrl)
-            }
         } else {
             Toast.makeText(this, getString(R.string.auth_error_message), Toast.LENGTH_SHORT).show()
             val intent = Intent(this, PhoneLoginActivity::class.java)
@@ -285,21 +275,33 @@ class MainActivity : AppCompatActivity() {
         user: FirebaseUser,
         profileAtTopBinding: ProfileAtTopBinding
     ) {
-        dbReference.addListenerForSingleValueEvent(object : ValueEventListener {
+
+        displayNameTvText = user.displayName.toString()
+        profileAtTopBinding.name.text = displayNameTvText.split(" ")[0]
+
+
+        dbReference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+                profilePicUrl = user.photoUrl
+                profilePicUrl?.let {
+                    Log.d(TAG, "profilePicUrl: $profilePicUrl")
+                    profilePic = Picasso.get().load(profilePicUrl)
+                    profilePic.into(profileAtTopBinding.avatarIv)
+                }?: run {
+                    profileAtTopBinding.avatarIv.setImageResource(R.drawable.avatar)
+                }
                 for (userSnapshot in snapshot.children) {
                     Log.d(TAG, "userSnapshot: ${userSnapshot.key}")
                     val method = snapshot.key?.let {
                         Log.d(TAG, "auth type: ${userSnapshot.child("method").value}")
-                        profileAtTopBinding.name.text =
-                            userSnapshot.child("fullName").value.toString().split(" ")[0]
                         userSnapshot.child("method").value.toString()
                     }
-                    profileAtTopBinding.authTv.text = if (method == "phone") {
+                    authTvText = if (method == "phone") {
                         userSnapshot.child("phone").value.toString()
                     } else {
                         user.email ?: userSnapshot.child("email").value.toString()
                     }
+                    profileAtTopBinding.authTv.text = authTvText
 
                 }
             }

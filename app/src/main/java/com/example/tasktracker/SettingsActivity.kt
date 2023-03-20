@@ -10,6 +10,7 @@ import com.example.tasktracker.authentication.CompleteRegistrationActivity
 import com.example.tasktracker.authentication.phone.PhoneLoginActivity
 import com.example.tasktracker.databinding.ActivitySettingsBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.squareup.picasso.Picasso
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -18,6 +19,7 @@ class SettingsActivity : AppCompatActivity() {
     private val TAG = "SettingsActivity"
     private val FACEBOOK_URL = "https://www.facebook.com/apptimates"
     private val TWITTER_URL = "https://twitter.com/Apptimates"
+    private val INSTAGRAM_URL = "https://www.instagram.com/apptimates/"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +32,11 @@ class SettingsActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
         binding.emailOrPhoneTv.text = intent.getStringExtra("auth")
+        auth.currentUser?.let {
+            it.photoUrl?.let {uri ->
+                Picasso.get().load(uri).into(binding.avatarIv)
+            }
+        }
 
         registerEvents()
 
@@ -52,6 +59,18 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        binding.getSupportTv.setOnClickListener{
+            Toast.makeText(this, "Coming soon", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.faqTv.setOnClickListener{
+            Toast.makeText(this, "Coming soon", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.privacyPolicyTv.setOnClickListener{
+            Toast.makeText(this, "Coming soon", Toast.LENGTH_SHORT).show()
+        }
+
         binding.followFacebookTv.setOnClickListener{
             Log.d(TAG, "facebook clicked")
             gotoURL(FACEBOOK_URL)
@@ -60,6 +79,16 @@ class SettingsActivity : AppCompatActivity() {
             Log.d(TAG, "twitter clicked")
             gotoURL(TWITTER_URL)
         }
+
+        binding.followInstagramTv.setOnClickListener{
+            Log.d(TAG, "instagram clicked")
+            gotoURL(INSTAGRAM_URL)
+        }
+
+        binding.exportYourInfoTv.setOnClickListener{
+           Toast.makeText(this, "Coming soon", Toast.LENGTH_SHORT).show()
+        }
+
 
     }
 

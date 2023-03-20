@@ -1,6 +1,6 @@
-package com.example.tasktracker
+package com.example.tasktracker.utils
 
-class Utils {
+class CalendarUtils {
 
     val dayMap = mapOf(
         1 to "Monday",

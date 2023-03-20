@@ -1,5 +1,7 @@
 package com.example.tasktracker.data
 
+import android.util.Log
+import com.example.tasktracker.crypto.CryptoManager
 import com.google.firebase.database.Exclude
 import com.google.firebase.database.IgnoreExtraProperties
 
@@ -11,10 +13,15 @@ data class NoteData(
 ){
     // get map of user data
     @Exclude
-    fun toMap(): Map<String, String> {
+    fun toMap(): Map<String, String?> {
+        val cryptoManager = CryptoManager()
+        val encryptedTitle = cryptoManager.encryptData(title)
+        val encryptedDescription = cryptoManager.encryptData(description)
+        Log.d("NoteData", "Encrypted Note title = $encryptedTitle")
+        Log.d("NoteData", "Encrypted Note description = $encryptedDescription")
         return mapOf(
-            "title" to title,
-            "description" to description,
+            "title" to encryptedTitle,
+            "description" to encryptedDescription
         )
     }
 }

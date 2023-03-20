@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.tasktracker.AddTaskActivity
 import com.example.tasktracker.R
 import com.example.tasktracker.SwipeGesture
-import com.example.tasktracker.Utils
+import com.example.tasktracker.utils.CalendarUtils
 import com.example.tasktracker.adapters.HomeFragmentTaskAdapter
 import com.example.tasktracker.data.TaskData
 import com.example.tasktracker.databinding.FragmentHomeBinding
@@ -38,7 +38,7 @@ class HomeFragment : Fragment(), HomeFragmentTaskAdapter.OnItemClickListenerInte
     private var TAG = "HomeFragment"
     private lateinit var currentDate: LocalDate
     private lateinit var selectedDate: LocalDate
-    private lateinit var utils: Utils
+    private lateinit var calendarUtils: CalendarUtils
 
     private lateinit var binding: FragmentHomeBinding
     private lateinit var homeFragmentTaskAdapter: HomeFragmentTaskAdapter
@@ -122,7 +122,7 @@ class HomeFragment : Fragment(), HomeFragmentTaskAdapter.OnItemClickListenerInte
 //        Log.d(TAG, lDate.value.toString())
 
 
-        utils = Utils()
+        calendarUtils = CalendarUtils()
         taskListHomeScreenRv = binding.taskListHomeScreenRv
         minusOneDayButton = binding.minusOneDay
         minusTwoDaysButton = binding.minusTwoDays

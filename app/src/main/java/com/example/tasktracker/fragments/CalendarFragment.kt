@@ -15,10 +15,12 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.tasktracker.*
+import com.example.tasktracker.AddTaskActivity
+import com.example.tasktracker.SwipeGesture
 import com.example.tasktracker.adapters.CalendarFragmentTaskAdapter
 import com.example.tasktracker.data.TaskData
 import com.example.tasktracker.databinding.FragmentCalendarBinding
+import com.example.tasktracker.utils.CalendarUtils
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -54,7 +56,7 @@ class CalendarFragment : Fragment(), CalendarFragmentTaskAdapter.OnItemClickList
     private lateinit var taskListCalendarScreenRv: RecyclerView
     private lateinit var calendarView: CalendarView
 
-    private lateinit var utils: Utils
+    private lateinit var calendarUtils: CalendarUtils
 
     private lateinit var completedButtonTv: TextView
     private lateinit var pendingButtonTv: TextView
@@ -86,7 +88,7 @@ class CalendarFragment : Fragment(), CalendarFragmentTaskAdapter.OnItemClickList
         completedButtonTv = binding.taskStatusButtonGroup.completedButtonTv
         pendingButtonTv = binding.taskStatusButtonGroup.pendingButtonTv
         allTasksButtonTv = binding.taskStatusButtonGroup.allTasksButtonTv
-        utils = Utils()
+        calendarUtils = CalendarUtils()
         calendarView = binding.calendarView
         taskListCalendarScreenRv = binding.taskListCalendarScreenRv
 
@@ -94,7 +96,7 @@ class CalendarFragment : Fragment(), CalendarFragmentTaskAdapter.OnItemClickList
         currentYear = calendar.get(Calendar.YEAR)
         currentMonth = calendar.get(Calendar.MONTH)
         currentDay = calendar.get(Calendar.DAY_OF_MONTH)
-        currentDate = "$currentDay ${utils.monthMap[currentMonth]} $currentYear"
+        currentDate = "$currentDay ${calendarUtils.monthMap[currentMonth]} $currentYear"
         selectedDate = currentDate
         auth = FirebaseAuth.getInstance()
         authId = auth.currentUser!!.uid
@@ -189,7 +191,7 @@ class CalendarFragment : Fragment(), CalendarFragmentTaskAdapter.OnItemClickList
         calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
             Log.d("CalendarFragment", "onViewCreated: $year, $month, $dayOfMonth")
             // date format used: 4 March 2023, Saturday
-            selectedDate = "$dayOfMonth ${utils.monthMap[month]} $year"
+            selectedDate = "$dayOfMonth ${calendarUtils.monthMap[month]} $year"
 
             Log.d("CalendarFragment", "selectedDate: $selectedDate")
 
